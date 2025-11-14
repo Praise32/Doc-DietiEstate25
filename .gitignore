@@ -1,0 +1,43 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+*.bbl
+*.blg
+*.brf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*_minted-*            # output of minted
+*.xdv
+*.toc
+
+# LaTeX build dirs
+_build/
+build/
+latex-build/
+out/
+
+# Editor / OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log.*
+*.bak
