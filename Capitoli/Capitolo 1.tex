@@ -1,0 +1,143 @@
+% =====================================================================
+% --- CAPITOLO 1: REQUISITI SOFTWARE ---
+% =====================================================================
+\chapter{Requisiti Software}
+Questo capitolo descrive i requisiti funzionali e non funzionali del sistema DietiEstates25.
+
+\section{Glossario}
+\begin{description}
+    \item[Agenzia Immobiliare] Entità che gestisce un insieme di agenti e inserzioni immobiliari.
+    \item[Agente Immobiliare] Utente autorizzato a inserire, modificare e gestire le inserzioni di immobili per conto di un'agenzia.
+    \item[Utente/Cliente] Utente finale che cerca, visualizza immobili, prenota visite e fa offerte.
+    \item[Inserzione] Annuncio di un immobile in vendita o in affitto, completo di dettagli.
+    \item[Amministratore] Utente gestore dell'agenzia con privilegi elevati.
+\end{description}
+
+\section{Modellazione dei Casi d'Uso}
+Di seguito sono elencati i principali casi d'uso identificati per il sistema DietiEstates25.
+\begin{itemize}
+    \item Gestione Account (Login/Registrazione)
+    \item Inserimento Inserzioni Immobiliari
+    \item Modifica/Cancellazione Inserzioni
+    \item Ricerca Avanzata Immobili
+    \item Visualizzazione Dettagli Inserzione
+    \item Prenotazione Visita
+    \item Gestione Visite (Conferma/Rifiuto)
+    \item Gestione Offerte
+    % Aggiungere altri casi d'uso assegnati al gruppo
+\end{itemize}
+% Qui andrebbe inserito il diagramma dei casi d'uso complessivo.
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{use-case-diagram.png}
+%     \caption{Diagramma dei Casi d'Uso di DietiEstates25.}
+%     \label{fig:usecase}
+% \end{figure}
+
+\section{Individuazione e Caratterizzazione degli Utenti (Personas)}
+% In questa sezione, descrivere 2-3 "Personas" che rappresentino gli utenti target.
+% Esempio:
+% \subsection{Mario Rossi - Il Cliente in Cerca della Prima Casa}
+% \textbf{Background:} Mario ha 30 anni, è un impiegato e cerca la sua prima casa a Napoli...
+% \textbf{Obiettivi:} Trovare un trilocale vicino alla metropolitana con un budget massimo di...
+% \textbf{Frustrazioni:} Sistemi di ricerca lenti, poche foto, informazioni poco chiare...
+
+\section{Requisiti Non Funzionali e di Dominio}
+\begin{itemize}
+    \item \textbf{Performance:} La ricerca degli immobili deve essere efficiente e restituire risultati in tempi rapidi.
+    \item \textbf{Affidabilità:} Il sistema deve essere robusto e garantire la consistenza dei dati.
+    \item \textbf{Usabilità:} L'interfaccia utente deve essere intuitiva, rapida e piacevole da usare.
+    \item \textbf{Sicurezza:} Le credenziali degli utenti devono essere salvate in modo sicuro (e.g., tramite hashing).
+    \item \textbf{Portabilità:} Il sistema deve essere accessibile tramite diverse piattaforme (mobile, desktop o web).
+\end{itemize}
+
+\section{Formalizzazione dei Casi d'Uso Significativi}
+\subsection{Caso d'Uso: Login e Registrazione Utente}
+\cockburn
+{Login e Registrazione Utente}
+{Utente (Cliente, Agente, Amministratore)}
+{Permettere agli utenti di accedere al sistema o di creare un nuovo account per usufruire dei servizi.}
+{L'utente non è autenticato.}
+{L'utente è autenticato e viene reindirizzato alla sua dashboard.}
+{
+    \begin{enumerate}
+        \item L'utente seleziona l'opzione di login o registrazione.
+        \item Se registrazione, inserisce email e password. Il sistema valida i dati e crea l'account.
+        \item Se login, inserisce le credenziali.
+        \item Il sistema verifica le credenziali.
+        \item L'utente accede al sistema.
+    \end{enumerate}
+}
+{
+    \textbf{4a. Credenziali errate:} Il sistema mostra un messaggio di errore. \\
+    \textbf{2a. Email già in uso:} Il sistema notifica che l'email è già registrata.
+}
+{Supporto per login/registrazione tramite provider di terze parti (es. Google). Le credenziali devono essere salvate in modo sicuro.}
+
+% Inserire qui il mock-up per la UI di login/registrazione.
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.6\textwidth]{mockup-login.png}
+%     \caption{Mock-up per la schermata di Login.}
+% \end{figure}
+
+\subsection{Caso d'Uso: Inserimento Immobile}
+\cockburn
+{Inserimento Nuovo Immobile}
+{Agente Immobiliare}
+{Permettere a un agente di caricare una nuova inserzione immobiliare nel sistema.}
+{L'agente immobiliare è autenticato nel sistema.}
+{Una nuova inserzione immobiliare è stata creata e resa visibile agli utenti.}
+{
+    \begin{enumerate}
+        \item L'agente seleziona l'opzione per creare una nuova inserzione.
+        \item Compila il form con i dettagli dell'immobile (descrizione, prezzo, dimensioni, etc.).
+        \item Carica le foto dell'immobile.
+        \item Seleziona la posizione su una mappa interattiva (es. Google Maps).
+        \item Il sistema, tramite API esterne (es. Geoapify), verifica la presenza di servizi nelle vicinanze.
+        \item L'agente conferma e pubblica l'inserzione.
+    \end{enumerate}
+}
+{\textbf{2a. Dati incompleti/errati:} Il sistema segnala i campi obbligatori o non validi.}
+{L'integrazione con API per la geolocalizzazione (Google Maps) e per la verifica dei servizi di prossimità (Geoapify) è richiesta.}
+
+\subsection{Caso d'Uso: Ricerca Avanzata Immobili}
+\cockburn
+{Ricerca Avanzata Immobili}
+{Utente/Cliente}
+{Permettere agli utenti di cercare immobili utilizzando filtri multipli.}
+{L'utente si trova sulla pagina di ricerca.}
+{Il sistema mostra una lista (o una mappa) di immobili che corrispondono ai criteri di ricerca.}
+{
+    \begin{enumerate}
+        \item L'utente accede alla sezione di ricerca.
+        \item Imposta i parametri di ricerca (prezzo, stanze, posizione, etc.).
+        \item Avvia la ricerca.
+        \item Il sistema interroga il database e restituisce i risultati.
+        \item I risultati vengono visualizzati su una mappa interattiva (es. Leaflet/Google Maps).
+    \end{enumerate}
+}
+{\textbf{4a. Nessun risultato:} Il sistema informa l'utente che non ci sono immobili corrispondenti ai criteri.}
+{La ricerca deve essere performante. È gradita la possibilità di ricerca in un raggio specifico.}
+
+\subsection{Caso d'Uso: Prenotazione Visita}
+\cockburn
+{Prenotazione Visita}
+{Utente/Cliente}
+{Permettere a un cliente di prenotare una visita per un immobile di suo interesse.}
+{L'utente è autenticato e sta visualizzando i dettagli di un immobile.}
+{Una richiesta di prenotazione visita viene inviata all'agente immobiliare responsabile.}
+{
+    \begin{enumerate}
+        \item L'utente seleziona "Prenota Visita" sull'inserzione.
+        \item Il sistema mostra le disponibilità per le successive due settimane.
+        \item Il sistema visualizza le previsioni meteo per i giorni disponibili (tramite API Open Meteo).
+        \item L'utente sceglie una data e un orario.
+        \item L'utente conferma la prenotazione.
+        \item Il sistema invia una notifica all'agente.
+    \end{enumerate}
+}
+{\textbf{2a. Nessuna disponibilità:} Il sistema informa che non ci sono slot disponibili.}
+{Integrazione con API esterne per le previsioni meteo (es. Open Meteo).}
+
+\newpage

@@ -1,0 +1,58 @@
+%==============================================================================================================================
+% --- CAPITOLO 2: DESIGN DEL SISTEMA ---
+% =====================================================================
+\chapter{Design del Sistema}
+Questo capitolo descrive l'architettura e le scelte di progettazione per il sistema DietiEstates25.
+
+\section{Descrizione dell'Architettura Proposta}
+Il sistema è basato su un'architettura a sistema distribuito, suddivisa in due macro-componenti indipendenti:
+\begin{description}
+    \item[Back-end] Un servizio responsabile della logica di business, della gestione dei dati e dell'esposizione di API REST. È completamente disaccoppiato dal front-end e gestisce in modo centralizzato lo stato dell'applicazione e la persistenza dei dati.
+    \item[Front-end] Un'interfaccia utente (es. web application) che comunica con il back-end esclusivamente tramite le API REST esposte. Questa separazione consente di modificare o sostituire l'interfaccia utente senza impattare la logica di business.
+\end{description}
+% Spiegare qui le motivazioni della scelta (es. scalabilità, manutenibilità, separazione dei compiti).
+% Aggiungere un diagramma architetturale.
+
+\section{Descrizione e Motivazione delle Scelte Tecnologiche}
+% Descrivere qui le tecnologie scelte per ogni componente e motivare la scelta.
+\begin{description}
+    \item[Linguaggio Back-end] E.g., Java con Spring Boot, per la sua robustezza e il vasto ecosistema.
+    \item[Database] E.g., PostgreSQL, per il supporto a query geospaziali.
+    \item[Framework Front-end] E.g., React o Angular, per la creazione di Single Page Application moderne e reattive.
+    \item[API Esterne]
+    \begin{itemize}
+        \item \textbf{Google API}: Per l'autenticazione tramite OAuth2.
+        \item \textbf{Google Maps/Leaflet}: Per la visualizzazione e interazione con le mappe.
+        \item \textbf{Open Meteo}: Per ottenere le previsioni del tempo.
+        \item \textbf{Geoapify}: Per la verifica dei servizi di prossimità.
+    \end{itemize}
+    \item[Containerizzazione (Opzionale)] Docker, per facilitare il deployment e garantire la coerenza tra gli ambienti.
+\end{description}
+
+\section{Descrizione dello Schema per la Persistenza Dati}
+% Inserire qui il diagramma Entità-Relazione (ERD) del database.
+% Descrivere le tabelle principali e le loro relazioni (es. Utenti, Immobili, Prenotazioni, Offerte).
+
+\section{Descrizione e Motivazione delle Scelte di Design dell'Interfaccia Utente}
+% Descrivere qui i principi di design UI/UX adottati (es. design minimalista, mobile-first).
+% Motivare le scelte in relazione all'obiettivo di un'esperienza "intuitiva, rapida e piacevole".
+
+\section{Diagramma delle Classi di Design}
+% Inserire qui il diagramma delle classi UML che modella il dominio del back-end.
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=\textwidth]{class-diagram.png}
+%     \caption{Diagramma delle Classi di Design.}
+% \end{figure}
+
+\section{Diagrammi di Sequenza di Design}
+% Inserire qui i diagrammi di sequenza UML per i casi d'uso formalizzati nel capitolo precedente.
+% \subsection{Sequenza: Inserimento Immobile}
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=\textwidth]{sequence-inserimento.png}
+%     \caption{Diagramma di Sequenza per l'inserimento di un immobile.}
+% \end{figure}
+
+
+\newpage

@@ -1,0 +1,82 @@
+% =====================================================================
+% --- CAPITOLO 3: TESTING E USABILITÀ ---
+% =====================================================================
+\chapter{Testing e Valutazione dell'Usabilità}
+Questo capitolo descrive le strategie di verifica e validazione adottate per il sistema.
+
+\section{Unit Testing (xUnit)}
+% Descrivere le strategie adottate per la progettazione dei test di unità.
+% Esempio per un metodo:
+% \subsection{Test del metodo 'calculateOfferAcceptance'}
+% \begin{description}
+%     \item[Classi di Equivalenza]
+%     \begin{itemize}
+%         \item Offerta superiore al 90% del prezzo richiesto (valida).
+%         \item Offerta inferiore al 90% del prezzo richiesto (non valida).
+%         \item Offerta con valore negativo (invalida).
+%     \end{itemize}
+%     \item[Criteri di Copertura] È stato adottato il criterio di statement coverage, assicurando che ogni linea di codice del metodo sia eseguita almeno una volta.
+% \end{description}
+% Includere poi il codice dei test.
+
+\section{Valutazione dell'Usabilità}
+\subsection{Expert Reviews / Inspections}
+È stata definita una checklist per condurre una review sistematica dell'usabilità del prodotto, basata sulle euristiche di Nielsen.
+\begin{longtable}{|L{12cm}|C{1cm}|C{1cm}|}
+\hline
+\textbf{Euristica} & \textbf{Sì} & \textbf{No} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- segue dalla pagina precedente}} \\
+\hline
+\textbf{Euristica} & \textbf{Sì} & \textbf{No} \\
+\hline
+\endhead
+\hline \multicolumn{3}{r}{{\emph{continua nella pagina seguente}}} \\
+\endfoot
+\hline
+\endlastfoot
+1. Visibilità dello stato del sistema: Il sistema informa sempre l'utente su cosa sta succedendo? & & \\
+\hline
+2. Corrispondenza tra sistema e mondo reale: Il linguaggio usato è familiare all'utente? & & \\
+\hline
+3. Controllo e libertà dell'utente: L'utente può facilmente annullare un'azione? & & \\
+\hline
+4. Consistenza e standard: La terminologia e le azioni sono consistenti in tutta l'applicazione? & & \\
+\hline
+% ... Aggiungere le altre euristiche ...
+\hline
+\end{longtable}
+
+\subsection{Progettazione di un Esperimento con Utenti}
+\subsubsection{Descrizione dei Soggetti, Procedura e Metriche}
+\begin{description}
+    \item[Soggetti Reclutati] N. 5 studenti universitari, età 20-25, con familiarità nell'uso di applicazioni web per la ricerca di immobili.
+    \item[Procedura Sperimentale] A ogni utente è stato chiesto di completare tre task:
+    \begin{enumerate}
+        \item Registrare un nuovo account.
+        \item Cercare un bilocale in una specifica zona e salvarlo nei preferiti.
+        \item Prenotare una visita per l'immobile trovato.
+    \end{enumerate}
+    \item[Metriche Considerate]
+    \begin{itemize}
+        \item \textbf{Efficacia:} Tasso di successo nel completamento dei task.
+        \item \textbf{Efficienza:} Tempo medio impiegato per completare ciascun task.
+        \item \textbf{Soddisfazione:} Risultati del survey post-test.
+    \end{itemize}
+\end{description}
+
+\subsubsection{Definizione del Survey}
+% Inserire qui le domande del survey (es. usando la scala SUS - System Usability Scale).
+\begin{enumerate}
+    \item Penso che userei questo sistema frequentemente. (1-5)
+    \item Ho trovato il sistema inutilmente complesso. (1-5)
+    \item Ho pensato che il sistema fosse facile da usare. (1-5)
+    % ...
+\end{enumerate}
+
+\subsubsection{Presentazione e Discussione dei Risultati}
+% Analizzare e discutere qui i risultati raccolti dalle metriche e dal survey.
+% Es. "Il 100% degli utenti ha completato con successo tutti i task. Il tempo medio per la prenotazione di una visita è stato di 90 secondi. Il punteggio medio del survey è stato di 85/100, indicando un'elevata soddisfazione..."
+% Discutere i problemi di usabilità emersi e proporre possibili miglioramenti.

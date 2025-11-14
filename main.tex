@@ -1,0 +1,94 @@
+\documentclass[12pt, a4paper]{report}
+
+% --- PACHETTI UTILIZZATI ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{xcolor}
+
+% --- IMPOSTAZIONI DI PAGINA E STILE ---
+\geometry{a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Documentazione Progetto DietiEstates25},
+    pdfpagemode=FullScreen,
+}
+
+% --- DEFINIZIONE TABELLA COCKBURN ---
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcommand{\cockburn}[8]{
+    \begin{center}
+    \captionof{table}{Caso d'uso: #1}
+    \begin{tabular}{|L{4cm}|L{11cm}|}
+        \hline
+        \textbf{Caso d'uso} & #1 \\
+        \hline
+        \textbf{Attori} & #2 \\
+        \hline
+        \textbf{Scopo} & #3 \\
+        \hline
+        \textbf{Precondizioni} & #4 \\
+        \hline
+        \textbf{Postcondizioni} & #5 \\
+        \hline
+        \textbf{Scenario Principale} & #6 \\
+        \hline
+        \textbf{Scenari Alternativi} & #7 \\
+        \hline
+        \textbf{Requisiti Speciali} & #8 \\
+        \hline
+    \end{tabular}
+    \end{center}
+}
+
+% =====================================================================
+% --- FRONTESPIZIO ---
+% =====================================================================
+\title{
+    \vspace{2cm}
+    \includegraphics[width=0.4\textwidth]{images/logo.png} \\ % Aggiungi il logo Unina qui
+    \textsc{\LARGE Università degli Studi di Napoli Federico II} \\
+    \textsc{\Large Scuola Politecnica e delle Scienze di Base} \\[1.5cm]
+    \rule{\linewidth}{0.5mm} \\[0.4cm]
+    { \Large \bfseries Progetto di Ingegneria del Software \\ A.A. 2024/2025 \\[0.4cm] }
+    \rule{\linewidth}{0.5mm} \\[1.5cm]
+    \huge \textbf{DietiEstates25} \\
+    \Large Documentazione di Progetto \\[2cm]
+}
+\author{
+    \textbf{Gruppo:} INGSW2425\_XXX \\ % Sostituisci XXX con il tuo ID Gruppo
+    \textbf{Componenti:} \\
+    Nome Cognome - N86004374 \\
+    Nome Cognome - N86004074 \\
+    }
+\date{\today}
+
+
+% =====================================================================
+% --- INIZIO DEL DOCUMENTO ---
+% =====================================================================
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\include{Capitoli/Capitolo 1}
+\include{Capitoli/Capitolo 2}
+\include{Capitoli/Capitolo 3}
+
+
+
+\end{document}
