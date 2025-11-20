@@ -52,92 +52,162 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
 \end{itemize}
 
 \section{Formalizzazione dei Casi d'Uso Significativi}
-\subsection{Caso d'Uso: Login e Registrazione Utente}
-\cockburn
-{Login e Registrazione Utente}
-{Utente (Cliente, Agente, Amministratore)}
-{Permettere agli utenti di accedere al sistema o di creare un nuovo account per usufruire dei servizi.}
-{L'utente non è autenticato.}
-{L'utente è autenticato e viene reindirizzato alla sua dashboard.}
-{
-    \begin{enumerate}
-        \item L'utente seleziona l'opzione di login o registrazione.
-        \item Se registrazione, inserisce email e password. Il sistema valida i dati e crea l'account.
-        \item Se login, inserisce le credenziali.
-        \item Il sistema verifica le credenziali.
-        \item L'utente accede al sistema.
-    \end{enumerate}
-}
-{
-    \textbf{4a. Credenziali errate:} Il sistema mostra un messaggio di errore. \\
-    \textbf{2a. Email già in uso:} Il sistema notifica che l'email è già registrata.
-}
-{Supporto per login/registrazione tramite provider di terze parti (es. Google). Le credenziali devono essere salvate in modo sicuro.}
 
-% Inserire qui il mock-up per la UI di login/registrazione.
-% \begin{figure}[h!]
-%     \centering
-%     \includegraphics[width=0.6\textwidth]{mockup-login.png}
-%     \caption{Mock-up per la schermata di Login.}
-% \end{figure}
+\subsection{Caso d'Uso: Login e Registrazione Utente}
+\begin{table}[htbp]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Login e Registrazione}
+    \label{tab:uc_login}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#1: Login e Registrazione}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole accedere al sistema o creare un nuovo account.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente non è autenticato.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{L'utente è autenticato e reindirizzato alla dashboard.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'utente rimane non autenticato (credenziali errate o email esistente).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente (Cliente, Agente, Admin)} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente accede alla pagina di login/registrazione.} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{5}{*}{} 
+          & 1 & Seleziona Login o Registrazione & \\ \cline{2-4}
+          & 2 & Inserisce credenziali (email/pwd) & \\ \cline{2-4}
+          & 3 & Clicca "Accedi" o "Registrati" & \\ \cline{2-4}
+          & 4 & & Valida i dati e verifica le credenziali \\ \cline{2-4}
+          & 5 & & Autentica l'utente e mostra la Dashboard. Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Credenziali Errate
+          & 4a & & Rileva dati non validi \\ \cline{2-4}
+          & 4b & & Mostra messaggio di errore. Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
 
 \subsection{Caso d'Uso: Inserimento Immobile}
-\cockburn
-{Inserimento Nuovo Immobile}
-{Agente Immobiliare}
-{Permettere a un agente di caricare una nuova inserzione immobiliare nel sistema.}
-{L'agente immobiliare è autenticato nel sistema.}
-{Una nuova inserzione immobiliare è stata creata e resa visibile agli utenti.}
-{
-    \begin{enumerate}
-        \item L'agente seleziona l'opzione per creare una nuova inserzione.
-        \item Compila il form con i dettagli dell'immobile (descrizione, prezzo, dimensioni, etc.).
-        \item Carica le foto dell'immobile.
-        \item Seleziona la posizione su una mappa interattiva (es. Google Maps).
-        \item Il sistema, tramite API esterne (es. Geoapify), verifica la presenza di servizi nelle vicinanze.
-        \item L'agente conferma e pubblica l'inserzione.
-    \end{enumerate}
-}
-{\textbf{2a. Dati incompleti/errati:} Il sistema segnala i campi obbligatori o non validi.}
-{L'integrazione con API per la geolocalizzazione (Google Maps) e per la verifica dei servizi di prossimità (Geoapify) è richiesta.}
+\begin{table}[htbp]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Inserimento Immobile}
+    \label{tab:uc_inserimento}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#3: Inserimento Immobile}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'agente vuole pubblicare una nuova inserzione immobiliare.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'agente è autenticato nel sistema.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{La nuova inserzione è salvata e visibile agli utenti.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'inserzione non viene creata (dati mancanti).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Agente Immobiliare} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'agente clicca su "Nuova Inserzione".} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{6}{*}{} 
+          & 1 & Clicca "Nuova Inserzione" & \\ \cline{2-4}
+          & 2 & & Mostra il form di inserimento \\ \cline{2-4}
+          & 3 & Compila dettagli e carica foto & \\ \cline{2-4}
+          & 4 & Seleziona posizione su mappa & \\ \cline{2-4}
+          & 5 & Clicca "Pubblica" & \\ \cline{2-4}
+          & 6 & & Verifica dati, salva inserzione e conferma. Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Dati Incompleti
+          & 6a & & Rileva campi obbligatori mancanti \\ \cline{2-4}
+          & 6b & & Segnala errori nel form. Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
 
 \subsection{Caso d'Uso: Ricerca Avanzata Immobili}
-\cockburn
-{Ricerca Avanzata Immobili}
-{Utente/Cliente}
-{Permettere agli utenti di cercare immobili utilizzando filtri multipli.}
-{L'utente si trova sulla pagina di ricerca.}
-{Il sistema mostra una lista (o una mappa) di immobili che corrispondono ai criteri di ricerca.}
-{
-    \begin{enumerate}
-        \item L'utente accede alla sezione di ricerca.
-        \item Imposta i parametri di ricerca (prezzo, stanze, posizione, etc.).
-        \item Avvia la ricerca.
-        \item Il sistema interroga il database e restituisce i risultati.
-        \item I risultati vengono visualizzati su una mappa interattiva (es. Leaflet/Google Maps).
-    \end{enumerate}
-}
-{\textbf{4a. Nessun risultato:} Il sistema informa l'utente che non ci sono immobili corrispondenti ai criteri.}
-{La ricerca deve essere performante. È gradita la possibilità di ricerca in un raggio specifico.}
+\begin{table}[htbp]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Ricerca Avanzata}
+    \label{tab:uc_ricerca}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Ricerca Avanzata}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole trovare immobili filtrati per criteri specifici.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente si trova nella pagina di ricerca.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema mostra la lista degli immobili corrispondenti.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{Nessun risultato trovato.} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente/Cliente} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente imposta i filtri e avvia la ricerca.} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{4}{*}{} 
+          & 1 & Imposta filtri (prezzo, zona...) & \\ \cline{2-4}
+          & 2 & Clicca "Cerca" & \\ \cline{2-4}
+          & 3 & & Interroga il database con i criteri \\ \cline{2-4}
+          & 4 & & Mostra risultati su lista/mappa. Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Nessun Risultato
+          & 3a & & Non trova corrispondenze \\ \cline{2-4}
+          & 4a & & Mostra messaggio "Nessun immobile trovato". Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
 
 \subsection{Caso d'Uso: Prenotazione Visita}
-\cockburn
-{Prenotazione Visita}
-{Utente/Cliente}
-{Permettere a un cliente di prenotare una visita per un immobile di suo interesse.}
-{L'utente è autenticato e sta visualizzando i dettagli di un immobile.}
-{Una richiesta di prenotazione visita viene inviata all'agente immobiliare responsabile.}
-{
-    \begin{enumerate}
-        \item L'utente seleziona "Prenota Visita" sull'inserzione.
-        \item Il sistema mostra le disponibilità per le successive due settimane.
-        \item Il sistema visualizza le previsioni meteo per i giorni disponibili (tramite API Open Meteo).
-        \item L'utente sceglie una data e un orario.
-        \item L'utente conferma la prenotazione.
-        \item Il sistema invia una notifica all'agente.
-    \end{enumerate}
-}
-{\textbf{2a. Nessuna disponibilità:} Il sistema informa che non ci sono slot disponibili.}
-{Integrazione con API esterne per le previsioni meteo (es. Open Meteo).}
+
+% --- CASO D'USO: PRENOTA VISITA ---
+\begin{table}[htbp]
+    \centering
+    \renewcommand{\arraystretch}{1.4} % Spazia un po' le righe per leggibilità
+    \caption{Caso d'uso: Prenota Visita}
+    \label{tab:uc_prenota_visita}
+    
+    % La tabella ha 4 colonne: 
+    % 1. Etichetta (H)
+    % 2. Step Num (S)
+    % 3. Azione Cliente (Y)
+    % 4. Azione Sistema (Y)
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        
+        % INTESTAZIONE
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#2: Prenota Visita}}} \\ \hline
+        
+        % CAMPI STANDARD (Uniamo le ultime 3 colonne con multicolumn)
+        Goal in Context & \multicolumn{3}{L{11cm}|}{Il cliente vuole prenotare una visita di un immobile.} \\ \hline
+        
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente deve aver effettuato l'accesso; Il cliente deve aver cercato un immobile; Il cliente è sulla scheda immobile.} \\ \hline
+        
+        Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema traccia la visita, la registra negli appuntamenti e notifica l'agente.} \\ \hline
+        
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{La prenotazione non viene effettuata; nessuna notifica all'agente.} \\ \hline
+        
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Cliente} \\ \hline
+        
+        Trigger & \multicolumn{3}{L{11cm}|}{Il cliente clicca "Prenota visita" nella schermata "Visualizza Immobile".} \\ \hline
+        
+        % --- SCENARIO PRINCIPALE ---
+        % Qui usiamo le 4 colonne separate
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Cliente}} & \textbf{\textit{System}} \\ \hline
+        
+        % Uso \multirow vuoto per lasciare la colonna sinistra pulita mentre scendiamo
+        \multirow{12}{*}{} 
+          & 1 & Clicca ``Prenota visita'' & \\ \cline{2-4}
+          & 2 & & Mostra M7 ``Prenota Visita'' con calendario \\ \cline{2-4}
+          & 3 & Seleziona il giorno & \\ \cline{2-4}
+          & 4 & Seleziona la fascia oraria & \\ \cline{2-4}
+          & 5 & Clicca ``Prosegui'' & \\ \cline{2-4}
+          & 6 & & Mostra M8 ``Messaggio di conferma'' \\ \cline{2-4}
+          & 7 & Clicca ``Ok'' & \\ \cline{2-4}
+          & 8 & & Mostra M4 ``Visualizza Immobile'' e notifica agente. Termina UC. \\ \hline
+          
+        % --- EXTENSIONS ---
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Cliente}} & \textbf{\textit{System}} \\ \hline
+        
+        \textbf{Ext. A}: Cliente annulla in M7 
+          & 1a & Clicca ``X'' (Chiudi) in M7 & \\ \cline{2-4}
+          & 2a & & Ritorna a M4. Termina UC. \\ \hline
+
+    \end{tabularx}
+\end{table}
 
 \newpage

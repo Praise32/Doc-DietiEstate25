@@ -1,58 +1,124 @@
-%==============================================================================================================================
+% =====================================================================
 % --- CAPITOLO 2: DESIGN DEL SISTEMA ---
 % =====================================================================
 \chapter{Design del Sistema}
-Questo capitolo descrive l'architettura e le scelte di progettazione per il sistema DietiEstates25.
+\label{cap:design}
+% Riferimento Traccia: "Output: Documento di Design del sistema"
+
+Questo capitolo descrive in dettaglio le scelte architetturali e di design adottate per il sistema DietiEstates25.
 
 \section{Descrizione dell'Architettura Proposta}
-Il sistema è basato su un'architettura a sistema distribuito, suddivisa in due macro-componenti indipendenti:
-\begin{description}
-    \item[Back-end] Un servizio responsabile della logica di business, della gestione dei dati e dell'esposizione di API REST. È completamente disaccoppiato dal front-end e gestisce in modo centralizzato lo stato dell'applicazione e la persistenza dei dati.
-    \item[Front-end] Un'interfaccia utente (es. web application) che comunica con il back-end esclusivamente tramite le API REST esposte. Questa separazione consente di modificare o sostituire l'interfaccia utente senza impattare la logica di business.
-\end{description}
-% Spiegare qui le motivazioni della scelta (es. scalabilità, manutenibilità, separazione dei compiti).
-% Aggiungere un diagramma architetturale.
+% Riferimento Traccia: "Descrizione dell’architettura proposta..."
+% Riferimenti Slide: 
+% 20 - Standard Software Architectures.pdf (Architettura Client-Server)
+% 25 - 26 - REST APIs.pdf (REST, JWT, Stateless)
+% 21 - 23 - Modern Software Architectures.pdf (Scalabilità)
+% 24 - Virtualizzazione e Cloud.pdf (PaaS, IaaS)
 
-\section{Descrizione e Motivazione delle Scelte Tecnologiche}
-% Descrivere qui le tecnologie scelte per ogni componente e motivare la scelta.
+L'architettura generale del sistema segue il pattern \textbf{Client-Server}, come illustrato nelle slide \textit{"Standard Software Architectures"}. Il sistema è disaccoppiato in due componenti principali:
+
 \begin{description}
-    \item[Linguaggio Back-end] E.g., Java con Spring Boot, per la sua robustezza e il vasto ecosistema.
-    \item[Database] E.g., PostgreSQL, per il supporto a query geospaziali.
-    \item[Framework Front-end] E.g., React o Angular, per la creazione di Single Page Application moderne e reattive.
-    \item[API Esterne]
-    \begin{itemize}
-        \item \textbf{Google API}: Per l'autenticazione tramite OAuth2.
-        \item \textbf{Google Maps/Leaflet}: Per la visualizzazione e interazione con le mappe.
-        \item \textbf{Open Meteo}: Per ottenere le previsioni del tempo.
-        \item \textbf{Geoapify}: Per la verifica dei servizi di prossimità.
-    \end{itemize}
-    \item[Containerizzazione (Opzionale)] Docker, per facilitare il deployment e garantire la coerenza tra gli ambienti.
+    \item[Client (Frontend)] Una Single-Page Application (SPA) sviluppata in \textbf{Angular}, responsabile della logica di presentazione e dell'interazione con l'utente.
+    \item[Server (Backend)] Un'applicazione \textbf{Node.js/Express} che gestisce la logica di business, l'autenticazione e l'accesso ai dati.
 \end{description}
 
-\section{Descrizione dello Schema per la Persistenza Dati}
-% Inserire qui il diagramma Entità-Relazione (ERD) del database.
-% Descrivere le tabelle principali e le loro relazioni (es. Utenti, Immobili, Prenotazioni, Offerte).
+La comunicazione tra client e server avviene esclusivamente tramite un'API che segue lo stile architetturale \textbf{REST (Representational State Transfer)}, come approfondito nelle slide \textit{"The REST Paradigm"}. Un principio chiave di questa architettura è l'essere \textbf{stateless}. L'autenticazione non si basa su sessioni lato server, ma su \textbf{JSON Web Token (JWT)}. Questo disaccoppia l'autenticazione dal server, migliorando la \textbf{scalabilità orizzontale} (come discusso nelle slide \textit{"Modern Software Architectures"}) e permettendo a qualsiasi istanza del server di gestire qualsiasi richiesta.
 
-\section{Descrizione e Motivazione delle Scelte di Design dell'Interfaccia Utente}
-% Descrivere qui i principi di design UI/UX adottati (es. design minimalista, mobile-first).
-% Motivare le scelte in relazione all'obiettivo di un'esperienza "intuitiva, rapida e piacevole".
+Il design sfrutta inoltre un modello \textbf{Hybrid Cloud} (vedi slide \textit{"Virtualizzazione e Cloud"}):
+\begin{itemize}
+    \item \textbf{PaaS (Platform as a Service):} Il database PostgreSQL è ospitato su Neon, un servizio gestito che si occupa della scalabilità e della manutenzione del database.
+    \item \textbf{IaaS (Infrastructure as a Service):} Lo storage dei file (immagini delle inserzioni) è delegato ad AWS S3, un servizio di storage a oggetti.
+\end{itemize}
+Questo disaccoppiamento dei servizi (applicazione, database, file) permette di scalare ogni componente in modo indipendente.
+
+\section{Stack Tecnologico e Motivazioni}
+% Riferimento Traccia: "Descrizione e motivazione delle scelte tecnologiche adottate."
+La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla performance e dalla robustezza dell'ecosistema.
+\begin{description}
+    \item[TypeScript] Scelto come linguaggio unificante sia per il frontend (Angular) che per il backend (Node.js/Express), permettendo la condivisione di interfacce e modelli e garantendo la type-safety.
+    \item[Angular (Frontend)] Scelto per la sua natura \textit{"opinionated"}, che fornisce una struttura robusta per la Dependency Injection, il routing e la gestione dei form (Reactive Forms).
+    \item[Express (Backend)] Scelto per la sua flessibilità e il suo ecosistema di middleware, ideale per la creazione rapida di API REST.
+    \item[Drizzle (ORM)] Scelto come ORM moderno "TypeScript-first". La sua integrazione con \textbf{Zod} (\texttt{drizzle-zod}) permette di generare automaticamente schemi di validazione API direttamente dallo schema del database, garantendo la coerenza dei dati end-to-end.
+    \item[Neon (Database)] Scelto come provider PaaS per PostgreSQL per la sua capacità di "scalare a zero" (serverless) e per la gestione efficiente delle connessioni.
+    \item[AWS S3 (Storage)] Scelto come standard de-facto per lo storage di oggetti, per la sua affidabilità e scalabilità.
+\end{description}
+
+\section{Pattern di Design del Backend (Express)}
+% Riferimento Traccia: "...esplicita definizione dei criteri di design adottati e delle motivazioni..."
+% Riferimenti Slide: 
+% 20 - Standard Software Architectures.pdf (3-Tier)
+% 19 - 20 -Design Patterns.pdf (DAO, Facade, Chain of Responsibility, Strategy)
+% docIng1.pdf, docIng2.pdf (Esempi di applicazione)
+
+\subsection{Architettura a 3 Livelli (3-Tier)}
+% Riferimento: Slide "Architetture a 3 livelli" (20 - Standard Software Architectures.pdf, Pag 37)
+Il backend Express è strutturato logicamente secondo un'architettura a 3 livelli, simile a quella vista nei progetti d'esempio:
+\begin{itemize}
+    \item \textbf{Presentation Layer (Controller):} I file di routing in \texttt{src/api/routes/} agiscono da Controller. Ricevono le richieste HTTP, le validano (tramite Zod e middleware) e invocano il livello di business.
+    \item \textbf{Business Logic Layer (Service):} Implementato dai nostri \textit{repository} (in \texttt{src/repository/}) e dai servizi in \texttt{src/utils/} (es. geocoding, email). Qui risiede la logica applicativa.
+    \item \textbf{Data Access Layer (DAO):} Implementato tramite l'ORM Drizzle e le definizioni in \texttt{src/db/schema/}.
+\end{itemize}
+
+\subsection{Repository Pattern (DAO)}
+% Riferimento: Slide "Data Access Object" (19 - 20 -Design Patterns.pdf, Pag 10)
+Per disaccoppiare la logica di business dalle query, è stato implementato il \textbf{Repository Pattern} (noto come \textbf{DAO} nelle slide del corso). I file in \texttt{src/repository/} (es. \texttt{posts.repository.ts}) incapsulano tutta la logica di accesso ai dati, fornendo metodi puliti al livello di business (es. \texttt{findPostById}).
+
+\subsection{Strategy Pattern (Passport.js)}
+% Riferimento: Slide "GoF Design Pattern" (19 - 20 -Design Patterns.pdf, Pag 15)
+Per l'autenticazione, la libreria Passport.js implementa lo \textbf{Strategy Pattern}. Questo ci ha permesso di definire strategie multiple e intercambiabili (JWT, Google, Local) senza modificare la logica di autenticazione principale.
+
+\subsection{Facade Pattern (API Routes)}
+% Riferimento: Slide "Facade Pattern" (19 - 20 -Design Patterns.pdf, Pag 59)
+I nostri file di routing (es. \texttt{posts.router.ts}) agiscono come un \textbf{Facade}. Forniscono un'interfaccia API semplice (es. \texttt{POST /api/posts}) che nasconde la complessità sottostante (autenticazione, upload S3, validazione, scrittura DB, invio email).
+
+\subsection{Middleware (Chain of Responsibility)}
+% Riferimento: Slide "GoF Design Pattern" (19 - 20 -Design Patterns.pdf, Pag 15)
+Express utilizza il pattern \textbf{Middleware}, concettualmente simile al \textbf{Chain of Responsibility}. Le nostre funzioni in \texttt{src/api/middleware/} (es. \texttt{authMiddleware}, \texttt{requireRole}) formano una catena che processa la richiesta, dove ogni anello ha una singola responsabilità.
+
+\section{Pattern di Design del Frontend (Angular)}
+% Riferimento Traccia: "...design dell’interfaccia utente..."
+% Riferimenti Slide: 
+% 21 - MVC.pdf (MVC, Observer)
+% 19 - 20 -Design Patterns.pdf (Observer)
+% 25 - 26 - REST APIs.pdf (IoC)
+% docIng2.pdf (MVVM)
+
+\subsection{Architettura a Componenti (MVVM)}
+% Riferimento: Slide "Model – View – Controller (MVC)" (21 - MVC.pdf) e Progetto (docIng2.pdf, Pag 44)
+Il frontend Angular non implementa il classico pattern \textbf{MVC}, ma la sua evoluzione moderna: l'\textbf{Architettura a Componenti}, che si allinea al pattern \textbf{MVVM (Model-View-ViewModel)}:
+\begin{itemize}
+    \item \textbf{Model:} Rappresentato dai nostri Servizi (es. \texttt{AuthService}, \texttt{AppointmentsService}) che gestiscono i dati e la logica di business.
+    \item \textbf{View:} I template HTML dei componenti (\texttt{.html}), che definiscono la UI in modo dichiarativo.
+    \item \textbf{ViewModel:} Le classi TypeScript dei componenti (\texttt{.ts}), che collegano la View ai Servizi, esponendo dati e gestendo gli eventi.
+\end{itemize}
+
+\subsection{Observer Pattern (RxJS)}
+% Riferimento: Slide "Observer (Behavioral)" (19 - 20 -Design Patterns.pdf, Pag 19)
+Il pattern \textbf{Observer} è centrale in Angular ed è implementato tramite \textbf{RxJS}. I servizi (Soggetti) espongono flussi di dati come \texttt{Observable}, e i componenti (Osservatori) si iscrivono (\texttt{subscribe}) per reagire ai cambiamenti di stato. Questo permette l'accoppiamento lasco tra Model e View descritto nelle slide del corso.
+
+\subsection{Dependency Injection (IoC)}
+% Riferimento: Slide "Inversion of Control (IoC) Principle" (25 - 26 - REST APIs.pdf, Pag 32)
+Angular implementa il pattern \textbf{Dependency Injection (DI)}, una forma di \textbf{Inversion of Control (IoC)}. I nostri componenti non creano le loro dipendenze (es. \texttt{AuthService}), ma le "richiedono" nel costruttore. Il framework le "inietta" automaticamente, promuovendo un codice disaccoppiato e testabile.
+
+\section{Schema per la Persistenza Dati}
+% Riferimento Traccia: "Descrizione dello schema per la persistenza dati."
+% Inserisci qui il tuo diagramma ERD (Entity-Relationship Diagram)
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=\textwidth]{images/ERD.png}
+%     \caption{Schema Entità-Relazione del database DietiEstates25.}
+%     \label{fig:erd}
+% \end{figure}
+\textit{[Placeholder per il diagramma ERD.]}
+
+Lo schema dati è stato definito utilizzando Drizzle ORM (vedi \texttt{src/db/schema/}). Le tabelle principali includono \texttt{users}, \texttt{agencies}, \texttt{posts} (inserzioni), \texttt{appointments} (appuntamenti) e \texttt{invites}. Abbiamo utilizzato le capacità di Drizzle per definire relazioni (es. \texttt{one-to-many} tra agenzia e agenti) e tipi di dati specifici (es. \texttt{pgEnum} per gli stati e \texttt{customType} per i dati geografici PostGIS).
 
 \section{Diagramma delle Classi di Design}
-% Inserire qui il diagramma delle classi UML che modella il dominio del back-end.
-% \begin{figure}[h!]
-%     \centering
-%     \includegraphics[width=\textwidth]{class-diagram.png}
-%     \caption{Diagramma delle Classi di Design.}
-% \end{figure}
+% Riferimento Traccia: "Diagramma delle classi di design."
+% Inserisci qui il diagramma delle classi (puoi generarlo da SonarQube o modellarlo in UML)
+\textit{[Placeholder per il Diagramma delle Classi di Design UML.]}
 
 \section{Diagrammi di Sequenza di Design}
-% Inserire qui i diagrammi di sequenza UML per i casi d'uso formalizzati nel capitolo precedente.
-% \subsection{Sequenza: Inserimento Immobile}
-% \begin{figure}[h!]
-%     \centering
-%     \includegraphics[width=\textwidth]{sequence-inserimento.png}
-%     \caption{Diagramma di Sequenza per l'inserimento di un immobile.}
-% \end{figure}
-
-
-\newpage
+% Riferimento Traccia: "Diagrammi di sequenza di design per i casi d’uso..."
+% Inserisci qui i diagrammi di sequenza per i 4 casi d'uso scelti.
+\textit{[Placeholder per i Diagrammi di Sequenza UML (es. Prenotazione Visita, Ricerca Immobile, etc.).]}

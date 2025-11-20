@@ -1,82 +1,72 @@
+%% =====================================================================
+% --- CAPITOLO 3: ARTEFATTI E PROCESSO DI SVILUPPO ---
 % =====================================================================
-% --- CAPITOLO 3: TESTING E USABILITÀ ---
-% =====================================================================
-\chapter{Testing e Valutazione dell'Usabilità}
-Questo capitolo descrive le strategie di verifica e validazione adottate per il sistema.
+\chapter{Artefatti e Processo di Sviluppo}
+\label{cap:artefatti}
+% Riferimento Traccia: "Output: Artefatti Software e documentazione del processo di sviluppo"
 
-\section{Unit Testing (xUnit)}
-% Descrivere le strategie adottate per la progettazione dei test di unità.
-% Esempio per un metodo:
-% \subsection{Test del metodo 'calculateOfferAcceptance'}
-% \begin{description}
-%     \item[Classi di Equivalenza]
-%     \begin{itemize}
-%         \item Offerta superiore al 90% del prezzo richiesto (valida).
-%         \item Offerta inferiore al 90% del prezzo richiesto (non valida).
-%         \item Offerta con valore negativo (invalida).
-%     \end{itemize}
-%     \item[Criteri di Copertura] È stato adottato il criterio di statement coverage, assicurando che ogni linea di codice del metodo sia eseguita almeno una volta.
-% \end{description}
-% Includere poi il codice dei test.
+Questo capitolo descrive gli artefatti tecnici prodotti e i processi utilizzati per la gestione del codice sorgente, la qualità e il deployment.
 
-\section{Valutazione dell'Usabilità}
-\subsection{Expert Reviews / Inspections}
-È stata definita una checklist per condurre una review sistematica dell'usabilità del prodotto, basata sulle euristiche di Nielsen.
-\begin{longtable}{|L{12cm}|C{1cm}|C{1cm}|}
-\hline
-\textbf{Euristica} & \textbf{Sì} & \textbf{No} \\
-\hline
-\endfirsthead
-\multicolumn{3}{c}%
-{{\bfseries \tablename\ \thetable{} -- segue dalla pagina precedente}} \\
-\hline
-\textbf{Euristica} & \textbf{Sì} & \textbf{No} \\
-\hline
-\endhead
-\hline \multicolumn{3}{r}{{\emph{continua nella pagina seguente}}} \\
-\endfoot
-\hline
-\endlastfoot
-1. Visibilità dello stato del sistema: Il sistema informa sempre l'utente su cosa sta succedendo? & & \\
-\hline
-2. Corrispondenza tra sistema e mondo reale: Il linguaggio usato è familiare all'utente? & & \\
-\hline
-3. Controllo e libertà dell'utente: L'utente può facilmente annullare un'azione? & & \\
-\hline
-4. Consistenza e standard: La terminologia e le azioni sono consistenti in tutta l'applicazione? & & \\
-\hline
-% ... Aggiungere le altre euristiche ...
-\hline
-\end{longtable}
+\section{Strumenti di Versioning (Git)}
+% Riferimento Traccia: "Evidenza dell’uso di strumenti di versioning..."
+% Inserisci qui screenshot o statistiche da GitHub (come in docIng2.pdf, pag. 63)
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{images/git-stats.png}
+%     \caption{Statistiche del repository Git del progetto.}
+% \end{figure}
+\textit{[Placeholder per statistiche Git: n. commit, contributori, frequenza...]}
 
-\subsection{Progettazione di un Esperimento con Utenti}
-\subsubsection{Descrizione dei Soggetti, Procedura e Metriche}
-\begin{description}
-    \item[Soggetti Reclutati] N. 5 studenti universitari, età 20-25, con familiarità nell'uso di applicazioni web per la ricerca di immobili.
-    \item[Procedura Sperimentale] A ogni utente è stato chiesto di completare tre task:
-    \begin{enumerate}
-        \item Registrare un nuovo account.
-        \item Cercare un bilocale in una specifica zona e salvarlo nei preferiti.
-        \item Prenotare una visita per l'immobile trovato.
-    \end{enumerate}
-    \item[Metriche Considerate]
-    \begin{itemize}
-        \item \textbf{Efficacia:} Tasso di successo nel completamento dei task.
-        \item \textbf{Efficienza:} Tempo medio impiegato per completare ciascun task.
-        \item \textbf{Soddisfazione:} Risultati del survey post-test.
-    \end{itemize}
-\end{description}
+\section{Report di Qualità del Codice (SonarQube)}
+% Riferimento Traccia: "Report di qualità del codice, generati da SonarQube..."
+% Inserisci qui gli screenshot principali del report di SonarQube (vedi docIng2.pdf, pag. 65)
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.9\textwidth]{images/sonarqube.png}
+%     \caption{Dashboard di SonarQube per il backend.}
+% \end{figure}
+\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
 
-\subsubsection{Definizione del Survey}
-% Inserire qui le domande del survey (es. usando la scala SUS - System Usability Scale).
-\begin{enumerate}
-    \item Penso che userei questo sistema frequentemente. (1-5)
-    \item Ho trovato il sistema inutilmente complesso. (1-5)
-    \item Ho pensato che il sistema fosse facile da usare. (1-5)
-    % ...
-\end{enumerate}
+\section{Containerizzazione (Dockerfile)}
+% Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
+% Riferimenti Slide: 24 - Virtualizzazione e Cloud.pdf
+Come richiesto, il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. Di seguito è riportato il \texttt{Dockerfile} utilizzato per il backend Express:
 
-\subsubsection{Presentazione e Discussione dei Risultati}
-% Analizzare e discutere qui i risultati raccolti dalle metriche e dal survey.
-% Es. "Il 100% degli utenti ha completato con successo tutti i task. Il tempo medio per la prenotazione di una visita è stato di 90 secondi. Il punteggio medio del survey è stato di 85/100, indicando un'elevata soddisfazione..."
-% Discutere i problemi di usabilità emersi e proporre possibili miglioramenti.
+\begin{lstlisting}[language=bash, caption={Dockerfile per il backend Node.js/Express}]
+# Stage 1: Build
+FROM node:18-alpine AS builder
+WORKDIR /usr/src/app
+
+# Copia package.json e installa le dipendenze
+COPY package*.json ./
+RUN npm install
+
+# Copia il resto del codice sorgente
+COPY . .
+
+# Compila il codice TypeScript
+RUN npm run build
+
+# Stage 2: Produzione
+FROM node:18-alpine
+WORKDIR /usr/src/app
+
+# Copia solo i file necessari dalla build precedente
+COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Installa solo le dipendenze di produzione
+RUN npm ci --only=production
+
+# Esponi la porta
+EXPOSE 3000
+
+# Comando di avvio
+CMD [ "node", "dist/index.js" ]
+\end{lstlisting}
+
+\section{File di Build Automatica}
+% Riferimento Traccia: "File di build automatica"
+La build automatica è gestita tramite gli script NPM definiti in \texttt{package.json} e orchestrati dal \texttt{Dockerfile}. Lo script \texttt{npm run build} (che esegue \texttt{tsc}) compila il codice TypeScript in JavaScript.
+
+Il deployment è automatizzato tramite \texttt{docker-compose.yml}, che orchestra l'avvio del container dell'applicazione e del database.

@@ -1,0 +1,103 @@
+% =====================================================================
+% --- CAPITOLO 4: TESTING E VALUTAZIONE DELL'USABILITÀ ---
+% =====================================================================
+\chapter{Testing e Valutazione dell'Usabilità}
+\label{cap:testing}
+% Riferimento Traccia: "Output: Testing e valutazione dell’usabilità"
+
+Questo capitolo descrive le strategie di verifica e validazione adottate.
+
+\section{Unit Testing (xUnit)}
+% Riferimento Traccia: "Codice xUnit per unit testing di quattro... metodi non banali..."
+% Riferimenti Slide: 27 - 29 - Verification and Validation.pdf
+% Descrivi qui le tue scelte (es. Jest per il backend Express)
+
+\subsection{Metodo 1: [Nome Metodo Es. createAppointment]}
+\begin{description}
+    \item[Descrizione Metodo] Il metodo \texttt{createAppointment(dto, userId)}...
+    \item[Classi di Equivalenza (Input)]
+    \begin{itemize}
+        \item \textbf{dto.date}: [CE1: Data futura valida], [CE2: Data passata (invalida)], [CE3: Data in formato non valido (invalida)]
+        \item \textbf{userId}: [CE1: ID utente valido], [CE2: ID utente non esistente (invalido)]
+        % ...
+    \end{itemize}
+    \item[Criteri di Copertura] È stato adottato il criterio R-WECT (Robust Weak Equivalence Class Testing), come visto nei progetti d'esempio (es. \texttt{docIng1.pdf, pag. 64}).
+\end{description}
+% Inserisci qui lo snippet di codice del test
+% \begin{lstlisting}[language=JavaScript, caption={Test per createAppointment}]
+% describe('AppointmentsService', () => {
+%   it('should not create an appointment for a past date', async () => {
+%     // ...
+%     await expect(service.createAppointment(pastDto, userId))
+%       .rejects.toThrow(BadRequestException);
+%   });
+%   // ...
+% });
+% \end{lstlisting}
+
+% ... Replica per gli altri metodi di test ...
+
+\section{Valutazione dell'Usabilità}
+% Riferimento Traccia: "Descrizione delle tecniche di valutazione dell’usabilità applicate"
+
+\subsection{Expert Reviews / Inspections}
+% Riferimento Traccia: "definizione di una checklist..."
+È stata condotta un'ispezione esperta (Expert Review) basata sulle \textbf{8 Regole d'Oro di Shneiderman} (come menzionato nel progetto \texttt{docIng1.pdf, pag. 74}).
+\begin{longtable}{|L{12cm}|C{1cm}|C{1cm}|}
+\hline
+\textbf{Euristica di Shneiderman} & \textbf{Sì} & \textbf{No} \\ \hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- segue dalla pagina precedente}} \\ \hline
+\textbf{Euristica} & \textbf{Sì} & \textbf{No} \\ \hline
+\endhead
+\hline \multicolumn{3}{r}{{\emph{continua nella pagina seguente}}} \\ \endfoot
+\hline
+\endlastfoot
+1. Sforzarsi per la coerenza & \checkmark & \\ \hline
+2. Abilitare scorciatoie per gli utenti esperti & & \checkmark \\ \hline
+3. Fornire un feedback informativo & \checkmark & \\ \hline
+4. Progettare dialoghi per chiudere un'azione & \checkmark & \\ \hline
+5. Prevenire gli errori & \checkmark & \\ \hline
+6. Consentire annullamenti semplici delle azioni & & \checkmark \\ \hline
+7. Favorire il controllo da parte dell'utente & \checkmark & \\ \hline
+8. Ridurre il carico cognitivo & \checkmark & \\
+\hline
+\end{longtable}
+% Discuti qui i risultati (es. "Come emerso, l'app eccelle nel feedback ma manca di scorciatoie...")
+
+\subsection{Esperimento con Utenti Reali}
+% Riferimento Traccia: "Progettazione e conduzione di un esperimento con utenti reali..."
+
+\subsubsection{Descrizione dei Soggetti, Procedura e Metriche}
+\begin{description}
+    \item[Soggetti Reclutati] 5 utenti (3 studenti di informatica, 2 studenti di altre facoltà), età 20-25.
+    \item[Procedura Sperimentale] Ad ogni utente è stato chiesto di completare 3 task sull'applicazione: (1) Trovare un bilocale a Napoli, (2) Prenotare una visita, (3) Inviare un'offerta.
+    \item[Metriche Considerate] \textit{(Vedi docIng1.pdf, pag. 81)}
+    \begin{itemize}
+        \item \textbf{Task Completion Rate (Efficacia):} Percentuale di utenti che hanno completato il task.
+        \item \textbf{Task Completion Time (Efficienza):} Tempo medio per completare il task.
+        \item \textbf{Soddisfazione Utente:} Punteggio medio del survey post-test.
+    \end{itemize}
+\end{description}
+
+\subsubsection{Definizione del Survey}
+% Riferimento Traccia: "Definizione di un survey..."
+Agli utenti è stato sottoposto un questionario post-test per valutare la soddisfazione (scala Likert 1-5):
+\begin{enumerate}
+    \item Quanto hai trovato facile trovare un immobile? (1=Molto Difficile, 5=Molto Facile)
+    \item L'interfaccia dell'applicazione è chiara e intuitiva? (1-5)
+    \item Il processo di prenotazione visita è stato fluido? (1-5)
+    \item Hai trovato le previsioni meteo utili durante la prenotazione? (1-5)
+\end{enumerate}
+
+\subsubsection{Presentazione e Discussione dei Risultati}
+% Riferimento Traccia: "Presentazione e discussione dei risultati..."
+% Inserisci qui grafici e analisi (vedi docIng1.pdf, pag. 84-87)
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.7\textwidth]{images/survey-results.png}
+%     \caption{Risultati del Survey di Usabilità.}
+% \end{figure}
+\textit{[Placeholder per grafici e discussione dei risultati.]}
+% Es. "Il 100% degli utenti ha completato i task 1 e 3. Il Task 2 (Prenotazione) ha mostrato un tempo medio di... I risultati del survey (Fig. X) mostrano un'alta soddisfazione (media 4.5/5)..."

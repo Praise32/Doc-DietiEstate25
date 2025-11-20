@@ -1,94 +1,94 @@
 \documentclass[12pt, a4paper]{report}
 
-% --- PACHETTI UTILIZZATI ---
+% --- PACCHETTI FONDAMENTALI ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
-\usepackage{graphicx}
 \usepackage{geometry}
-\usepackage{hyperref}
-\usepackage{array}
-\usepackage{longtable}
-\usepackage{booktabs}
+\usepackage[pdftex]{graphicx}
 \usepackage{caption}
-\usepackage{xcolor}
+\usepackage{subcaption}
 
-% --- IMPOSTAZIONI DI PAGINA E STILE ---
-\geometry{a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm}
+% --- PACCHETTI PER TABELLE E COLORI (IMPORTANTE: ORDINE) ---
+% xcolor deve essere caricato con l'opzione 'table' per colorare le celle
+\usepackage[table,xcdraw]{xcolor} 
+\usepackage{tabularx}  % Per tabelle a larghezza variabile
+\usepackage{multirow}  % Per unire celle verticalmente
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable} % Necessario per Capitolo 4
+\usepackage{amssymb}   % Necessario per \checkmark in Capitolo 4
+
+% --- DEFINIZIONE COLORI STILE COCKBURN (VERDE) ---
+\definecolor{ucBlue}{RGB}{34,139,34}   % Verde Scuro (ForestGreen)
+\definecolor{ucLight}{RGB}{235,250,235}    % Verde Chiaro
+
+% --- DEFINIZIONE COLONNE PERSONALIZZATE ---
+% Colonna H: Intestazione sinistra (grassetto, larghezza fissa)
+\newcolumntype{H}{>{\bfseries\raggedright\arraybackslash}p{3.8cm}} 
+% Colonna Y: Colonna elastica per il testo (si adatta alla pagina)
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+% Colonna S: Centrata piccola per gli step
+\newcolumntype{S}{>{\centering\arraybackslash}p{1.2cm}}
+
+% Colonne L e C (Ripristinate per compatibilità con Cap 4 e Multicolumn)
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% --- SETUP HYPERREF E CODICE ---
+\usepackage{hyperref}
+\usepackage{listings}
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=cyan,
-    pdftitle={Documentazione Progetto DietiEstates25},
-    pdfpagemode=FullScreen,
+    pdftitle={Documentazione DietiEstates25},
 }
 
-% --- DEFINIZIONE TABELLA COCKBURN ---
-\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\newcommand{\cockburn}[8]{
-    \begin{center}
-    \captionof{table}{Caso d'uso: #1}
-    \begin{tabular}{|L{4cm}|L{11cm}|}
-        \hline
-        \textbf{Caso d'uso} & #1 \\
-        \hline
-        \textbf{Attori} & #2 \\
-        \hline
-        \textbf{Scopo} & #3 \\
-        \hline
-        \textbf{Precondizioni} & #4 \\
-        \hline
-        \textbf{Postcondizioni} & #5 \\
-        \hline
-        \textbf{Scenario Principale} & #6 \\
-        \hline
-        \textbf{Scenari Alternativi} & #7 \\
-        \hline
-        \textbf{Requisiti Speciali} & #8 \\
-        \hline
-    \end{tabular}
-    \end{center}
-}
+\geometry{a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm}
 
-% =====================================================================
+\begin{document}
+
 % --- FRONTESPIZIO ---
-% =====================================================================
 \title{
     \vspace{2cm}
-    \includegraphics[width=0.4\textwidth]{images/logo.png} \\ % Aggiungi il logo Unina qui
+    \includegraphics[width=0.4\textwidth]{images/logo.png} % Inserisci il logo Unina
     \textsc{\LARGE Università degli Studi di Napoli Federico II} \\
     \textsc{\Large Scuola Politecnica e delle Scienze di Base} \\[1.5cm]
     \rule{\linewidth}{0.5mm} \\[0.4cm]
     { \Large \bfseries Progetto di Ingegneria del Software \\ A.A. 2024/2025 \\[0.4cm] }
     \rule{\linewidth}{0.5mm} \\[1.5cm]
-    \huge \textbf{DietiEstates25} \\
+    \huge \textbf{DietiEstates25} \\ % O il nome del tuo team
     \Large Documentazione di Progetto \\[2cm]
 }
 \author{
-    \textbf{Gruppo:} INGSW2425\_XXX \\ % Sostituisci XXX con il tuo ID Gruppo
-    \textbf{Componenti:} \\
-    Nome Cognome - N86004374 \\
-    Nome Cognome - N86004074 \\
-    }
-\date{\today}
-
-
-% =====================================================================
-% --- INIZIO DEL DOCUMENTO ---
-% =====================================================================
-\begin{document}
-
+    \textbf{Gruppo:} INGSW2425\_[ID GRUPPO] \\[0.3cm]
+    \textbf{Componenti:} \\[0.2cm]
+    {[}Nome Cognome - Matricola{]} \\
+    {[}Nome Cognome - Matricola{]} \\
+}
+\date{31 Marzo 2026} % O la data di consegna
 \maketitle
+
+% --- INDICE ---
 \tableofcontents
 \newpage
 
+
+% --- INCLUSIONE DEI CAPITOLI ---
+% Ogni capitolo è in un file .tex separato nella sottocartella "Capitoli/"
+
+% Output 1: Requisiti
 \include{Capitoli/Capitolo 1}
+
+% Output 2: Design
 \include{Capitoli/Capitolo 2}
+
+% Output 3: Artefatti
 \include{Capitoli/Capitolo 3}
 
+% Output 4: Testing
+\include{Capitoli/Capitolo 4}
 
 
 \end{document}
