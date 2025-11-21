@@ -34,6 +34,22 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
 %     \label{fig:usecase}
 % \end{figure}
 
+% Use Case Utenti Registrati e Non Registrati
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/UseCaseUtentiRegistrati.drawio.png}
+     \caption{Use Case Utenti Registrati}
+     \label{fig:UC1}
+ \end{figure}
+ 
+
+  \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/UseCaseNONRegistrato(1).drawio.png}
+     \caption{Use Case Utenti Non Registrati}
+     \label{fig:UC2}
+ \end{figure}
+
 \section{Individuazione e Caratterizzazione degli Utenti (Personas)}
 % In questa sezione, descrivere 2-3 "Personas" che rappresentino gli utenti target.
 % Esempio:
@@ -51,18 +67,29 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
     \item \textbf{Portabilità:} Il sistema deve essere accessibile tramite diverse piattaforme (mobile, desktop o web).
 \end{itemize}
 
+\section{Prototipazione visuale via Mock-up}
+Di seguito sono riportati i mock-up delle principali schermate dell'applicazione DietiEstates25, progettati per illustrare l'interfaccia utente e le funzionalità chiave.
+
+% MockUp Pagina Login
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/Pagina Login.png}
+     \caption{Mock-up M1: Pagina di Login}
+     \label{fig:M1}
+ \end{figure}
+ 
 \section{Formalizzazione dei Casi d'Uso Significativi}
 
-\subsection{Caso d'Uso: Login e Registrazione Utente}
+\subsection{Caso d'Uso: Cambio Password (Admin) }
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.4}
-    \caption{Caso d'uso: Login e Registrazione}
+    \caption{Caso d'uso: Cambio Password (Admin)}
     \label{tab:uc_login}
     \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
         \hline
         \rowcolor{ucBlue}
-        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#1: Login e Registrazione}}} \\ \hline
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#1: Cambio Password (Admin)}}} \\ \hline
         Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole accedere al sistema o creare un nuovo account.} \\ \hline
         Preconditions & \multicolumn{3}{L{11cm}|}{L'utente non è autenticato.} \\ \hline
         Success End Condition & \multicolumn{3}{L{11cm}|}{L'utente è autenticato e reindirizzato alla dashboard.} \\ \hline
@@ -84,6 +111,15 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
           & 4b & & Mostra messaggio di errore. Termina UC. \\ \hline
     \end{tabularx}
 \end{table}
+
+
+% MockUp Inserimento
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-ChangeAdminPassword(1).png}
+     \caption{MockUp Cambio Password Admin.}
+     \label{fig:mockup_change_admin_password}
+ \end{figure}
 
 \subsection{Caso d'Uso: Inserimento Immobile}
 \begin{table}[H]
@@ -118,7 +154,7 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
     \end{tabularx}
 \end{table}
 
-ù
+
 % MockUp Inserimento
  \begin{figure}[H]
      \centering
@@ -127,16 +163,16 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
      \label{fig:mockup_inserimento}
  \end{figure}
 
-\subsection{Caso d'Uso: Ricerca Avanzata Immobili}
+\subsection{Caso d'Uso: Aggiunta Agenti Immobiliari Non assegnati}
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.4}
-    \caption{Caso d'uso: Ricerca Avanzata}
-    \label{tab:uc_ricerca}
+    \caption{Caso d'uso: Aggiunta Agenti Immobiliari Non assegnati}
+    \label{tab:uc_aggiunta_agenti}
     \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
         \hline
         \rowcolor{ucBlue}
-        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Ricerca Avanzata}}} \\ \hline
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Aggiunta Agenti Immobiliari Non assegnati}}} \\ \hline
         Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole trovare immobili filtrati per criteri specifici.} \\ \hline
         Preconditions & \multicolumn{3}{L{11cm}|}{L'utente si trova nella pagina di ricerca.} \\ \hline
         Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema mostra la lista degli immobili corrispondenti.} \\ \hline
@@ -157,6 +193,16 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
           & 4a & & Mostra messaggio "Nessun immobile trovato". Termina UC. \\ \hline
     \end{tabularx}
 \end{table}
+
+
+% MockUp Aggiunta Agenti Immobiliari Non assegnati
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-UnassignedAgents.png}
+     \caption{MockUp Aggiunta Agenti Immobiliari Non assegnati.}
+     \label{fig:mockup_aggiunta_agenti}
+ \end{figure}
+
 
 \subsection{Caso d'Uso: Prenotazione Visita}
 
