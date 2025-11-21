@@ -114,20 +114,22 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
         \hline
         \rowcolor{ucBlue}
         \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#1: Cambio Password (Admin)}}} \\ \hline
-        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole accedere al sistema o creare un nuovo account.} \\ \hline
-        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente non è autenticato.} \\ \hline
-        Success End Condition & \multicolumn{3}{L{11cm}|}{L'utente è autenticato e reindirizzato alla dashboard.} \\ \hline
-        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'utente rimane non autenticato (credenziali errate o email esistente).} \\ \hline
-        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente (Cliente, Agente, Admin)} \\ \hline
-        Trigger & \multicolumn{3}{L{11cm}|}{L'utente accede alla pagina di login/registrazione.} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'Admin vuole cambiare la propria password.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'Admin è autenticato nel sistema e non ha cambiato la password di default.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{L'Admin ha cambiato con successo la propria password.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'Admin non riesce a cambiare la password (dati errati).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente (Admin)} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente accede alla pagina di login.} \\ \hline
         \rowcolor{ucLight}
         Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
         \multirow{5}{*}{} 
-          & 1 & Seleziona Login o Registrazione & \\ \cline{2-4}
-          & 2 & Inserisce credenziali (email/pwd) & \\ \cline{2-4}
-          & 3 & Clicca "Accedi" o "Registrati" & \\ \cline{2-4}
-          & 4 & & Valida i dati e verifica le credenziali \\ \cline{2-4}
-          & 5 & & Autentica l'utente e mostra la Dashboard. Termina UC. \\ \hline
+          & 1 &  & Mostra M2 "Notifica Pop\_up Cambio Password" \\ \cline{2-4}
+          & 2 & Utente Clicca la Notifica Pop\_up & \\ \cline{2-4}
+          & 3 &  &  Mostra M3 "Schermata Cambio Password" \\ \cline{2-4}
+          & 4 & Inserisce nuova password &  \\ \cline{2-4}
+          & 5 & Clicca "Change Password" &  \\ \hline
+          & 6 & & Mostra M4 "Conferma Cambio Password" \\ \hline
+          & 7 & Clicca "Back to Home" &  \\ \hline
         \rowcolor{ucLight}
         Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
         \textbf{Ext. A}: Credenziali Errate
