@@ -11,19 +11,30 @@ Questo capitolo descrive i requisiti funzionali e non funzionali del sistema Die
     \item[Utente/Cliente] Utente finale che cerca, visualizza immobili, prenota visite e fa offerte.
     \item[Inserzione] Annuncio di un immobile in vendita o in affitto, completo di dettagli.
     \item[Amministratore] Utente gestore dell'agenzia con privilegi elevati.
+    \item[UML (Unified Modeling Language)] Standard industriale di modellazione visuale. Fornisce un vocabolario grafico unificato per specificare, costruire e documentare l'architettura di un sistema software attraverso diverse tipologie di diagrammi (strutturali e comportamentali).
+    \item[Mockup] Prototipo visivo statico dell'interfaccia utente (UI). Viene utilizzato nelle fasi preliminari per definire il layout grafico e validare l'esperienza utente (UX) prima dell'effettiva implementazione del codice.
+    \item[Casi d’uso (Use Case)] Descrizione funzionale del comportamento del sistema in risposta a una richiesta esterna. Definiscono i requisiti funzionali narrando come il sistema interagisce con l'ambiente per raggiungere uno specifico obiettivo di business.
+    \item[Tabelle di Cockburn] Formalismo strutturato per la documentazione dettagliata dei casi d'uso. Scompongono l'interazione in uno schema rigoroso che include il flusso principale degli eventi, le precondizioni, le garanzie di successo e la gestione delle eccezioni (scenari alternativi).
+    \item[Attore] Qualsiasi entità esterna al perimetro del sistema (utente umano, dispositivo hardware o software di terze parti) che interagisce con esso scambiando informazioni o avviando processi.
+    \item[Personas] Archetipi di utenti fittizi, costruiti su dati reali, che rappresentano i diversi segmenti di pubblico target. Sono uno strumento fondamentale di design per focalizzare lo sviluppo sulle reali necessità e comportamenti degli utenti finali.
+    \item[Use Case Diagram] Diagramma UML che offre una visione di alto livello delle funzionalità del sistema. Definisce il confine del progetto (scope), illustrando le relazioni tra gli attori esterni e i casi d'uso supportati.
+    \item[Sequence Diagram] Diagramma UML di interazione che descrive la dinamica temporale di un processo. Mappa l'ordine cronologico dei messaggi scambiati tra i vari oggetti o componenti del sistema per completare una specifica operazione.
+    \item[API (Application Programming Interface)] Insieme di protocolli e strumenti che permette l'interoperabilità tra diverse applicazioni software. Funge da contratto di interfaccia, consentendo lo scambio di dati e funzionalità astraendo dalla complessità dell'implementazione sottostante.
+    \item[Front-end] Il livello di presentazione dell'architettura software. Comprende l'interfaccia utente e la logica eseguita lato client (es. nel browser), gestendo direttamente l'interazione visiva con l'utente.
+    \item[Back-end] Il livello di accesso ai dati e logica di business. Risiede sul server e gestisce l'elaborazione delle richieste, la sicurezza, le regole applicative e la persistenza delle informazioni nel database, rimanendo invisibile all'utente finale.
 \end{description}
 
 \section{Modellazione dei Casi d'Uso}
 Di seguito sono elencati i principali casi d'uso identificati per il sistema DietiEstates25.
 \begin{itemize}
-    \item Gestione Account (Login/Registrazione)
+    \item Gestione Account (Login/Registrazione, incluso Social Login Google)
     \item Inserimento Inserzioni Immobiliari
     \item Modifica/Cancellazione Inserzioni
-    \item Ricerca Avanzata Immobili
-    \item Visualizzazione Dettagli Inserzione
-    \item Prenotazione Visita
+    \item Ricerca Avanzata Immobili (Filtri e Mappa Interattiva)
+    \item Visualizzazione Dettagli Inserzione (con localizzazione su Mappa)
+    \item Prenotazione Visita (con integrazione API Meteo)
     \item Gestione Visite (Conferma/Rifiuto)
-    \item Gestione Offerte
+    \item Sistema di Notifiche Agenti (Email/Interne)
     % Aggiungere altri casi d'uso assegnati al gruppo
 \end{itemize}
 % Qui andrebbe inserito il diagramma dei casi d'uso complessivo.
@@ -66,6 +77,8 @@ Di seguito sono elencati i principali casi d'uso identificati per il sistema Die
     \item \textbf{Sicurezza:} Le credenziali degli utenti devono essere salvate in modo sicuro (e.g., tramite hashing).
     \item \textbf{Portabilità:} Il sistema deve essere accessibile tramite diverse piattaforme (mobile, desktop o web).
 \end{itemize}
+
+%----------------------------MOCKUP-----------------------------------
 
 \section{Prototipazione visuale via Mock-up}
 Di seguito sono riportati i mock-up delle principali schermate dell'applicazione DietiEstates25, progettati per illustrare l'interfaccia utente e le funzionalità chiave.
@@ -205,6 +218,14 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
     \label{fig:M18}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M20UnassignedAgentsEmpty}
+    \caption{Mock-up M20: Pagina Agenti Non Assegnati Vuota (Admin-Support)}
+    \label{fig:M20}
+\end{figure}
+%----------------------------USE CASES-----------------------------------
+
 \section{Formalizzazione dei Casi d'Uso Significativi}
 
 \subsection{Caso d'Uso: Cambio Password (Admin) }
@@ -242,7 +263,7 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
 \end{table}
 
 
-% MockUp Inserimento
+% MockUp Cambio Password
  \begin{figure}[H]
      \centering
      \includegraphics[width=0.8\textwidth]{images/mockup-ChangeAdminPassword(1).png}
@@ -250,87 +271,6 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
      \label{fig:mockup_change_admin_password}
  \end{figure}
 
-\subsection{Caso d'Uso: Inserimento Immobile}
-\begin{table}[H]
-    \centering
-    \renewcommand{\arraystretch}{1.4}
-    \caption{Caso d'uso: Inserimento Immobile}
-    \label{tab:uc_inserimento}
-    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
-        \hline
-        \rowcolor{ucBlue}
-        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#3: Inserimento Immobile}}} \\ \hline
-        Goal in Context & \multicolumn{3}{L{11cm}|}{L'agente vuole pubblicare una nuova inserzione immobiliare.} \\ \hline
-        Preconditions & \multicolumn{3}{L{11cm}|}{L'agente è autenticato nel sistema.} \\ \hline
-        Success End Condition & \multicolumn{3}{L{11cm}|}{La nuova inserzione è salvata e visibile agli utenti.} \\ \hline
-        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'inserzione non viene creata (dati mancanti).} \\ \hline
-        Primary Actor & \multicolumn{3}{L{11cm}|}{Agente Immobiliare} \\ \hline
-        Trigger & \multicolumn{3}{L{11cm}|}{L'agente clicca su "Nuova Inserzione".} \\ \hline
-        \rowcolor{ucLight}
-        Main Scenario & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
-        \multirow{6}{*}{} 
-          & 1 & Clicca "Nuova Inserzione" & \\ \cline{2-4}
-          & 2 & & Mostra il form di inserimento \\ \cline{2-4}
-          & 3 & Compila dettagli e carica foto & \\ \cline{2-4}
-          & 4 & Seleziona posizione su mappa & \\ \cline{2-4}
-          & 5 & Clicca "Pubblica" & \\ \cline{2-4}
-          & 6 & & Verifica dati, salva inserzione e conferma. Termina UC. \\ \hline
-        \rowcolor{ucLight}
-        Extensions & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
-        \textbf{Ext. A}: Dati Incompleti
-          & 6a & & Rileva campi obbligatori mancanti \\ \cline{2-4}
-          & 6b & & Segnala errori nel form. Termina UC. \\ \hline
-    \end{tabularx}
-\end{table}
-
-
-% MockUp Inserimento
- \begin{figure}[H]
-     \centering
-     \includegraphics[width=0.8\textwidth]{images/mockup-AggiungiProprietà.png}
-     \caption{MockUp Inserimento Immobile.}
-     \label{fig:mockup_inserimento}
- \end{figure}
-
-\subsection{Caso d'Uso: Aggiunta Agenti Immobiliari Non assegnati}
-\begin{table}[H]
-    \centering
-    \renewcommand{\arraystretch}{1.4}
-    \caption{Caso d'uso: Aggiunta Agenti Immobiliari Non assegnati}
-    \label{tab:uc_aggiunta_agenti}
-    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
-        \hline
-        \rowcolor{ucBlue}
-        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Aggiunta Agenti Immobiliari Non assegnati}}} \\ \hline
-        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente vuole trovare immobili filtrati per criteri specifici.} \\ \hline
-        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente si trova nella pagina di ricerca.} \\ \hline
-        Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema mostra la lista degli immobili corrispondenti.} \\ \hline
-        Failed End Condition & \multicolumn{3}{L{11cm}|}{Nessun risultato trovato.} \\ \hline
-        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente/Cliente} \\ \hline
-        Trigger & \multicolumn{3}{L{11cm}|}{L'utente imposta i filtri e avvia la ricerca.} \\ \hline
-        \rowcolor{ucLight}
-        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
-        \multirow{4}{*}{} 
-          & 1 & Imposta filtri (prezzo, zona...) & \\ \cline{2-4}
-          & 2 & Clicca "Cerca" & \\ \cline{2-4}
-          & 3 & & Interroga il database con i criteri \\ \cline{2-4}
-          & 4 & & Mostra risultati su lista/mappa. Termina UC. \\ \hline
-        \rowcolor{ucLight}
-        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
-        \textbf{Ext. A}: Nessun Risultato
-          & 3a & & Non trova corrispondenze \\ \cline{2-4}
-          & 4a & & Mostra messaggio "Nessun immobile trovato". Termina UC. \\ \hline
-    \end{tabularx}
-\end{table}
-
-
-% MockUp Aggiunta Agenti Immobiliari Non assegnati
- \begin{figure}[H]
-     \centering
-     \includegraphics[width=0.8\textwidth]{images/mockup-UnassignedAgents.png}
-     \caption{MockUp Aggiunta Agenti Immobiliari Non assegnati.}
-     \label{fig:mockup_aggiunta_agenti}
- \end{figure}
 
 
 \subsection{Caso d'Uso: Prenotazione Visita}
@@ -402,5 +342,94 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
      \caption{MockUp Prenotazione Visita.}
      \label{fig:mockup_prenotazione}
  \end{figure}
+
+
+
+\subsection{Caso d'Uso: Inserimento Immobile}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Inserimento Immobile}
+    \label{tab:uc_inserimento}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#3: Inserimento Immobile}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'agente vuole pubblicare una nuova inserzione immobiliare.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'agente è autenticato nel sistema.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{La nuova inserzione è salvata e visibile agli utenti.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'inserzione non viene creata (dati mancanti).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Agente Immobiliare} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'agente clicca su "Sell".} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{6}{*}{} 
+          & 1 & Clicca "Sell in M7" & \\ \cline{2-4}
+          & 2 & & Mostra il form di inserimento in M8 \\ \cline{2-4}
+          & 3 & Compila dettagli e carica foto & \\ \cline{2-4}
+          & 4 & Clicca "List Property for Sale" & \\ \cline{2-4}
+          & 5 & & Mostra M9 "Property Listed Successfully". Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Dati Incompleti
+          & 6a & & Rileva campi obbligatori mancanti \\ \cline{2-4}
+          & 6b & & Segnala errori nel form. Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
+
+
+% MockUp Inserimento
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-AggiungiProprietà.png}
+     \caption{MockUp Inserimento Immobile.}
+     \label{fig:mockup_inserimento}
+ \end{figure}
+
+\subsection{Caso d'Uso: Aggiunta Agenti Immobiliari Non assegnati}
+\begin{table}[H]
+    \caption{Caso d'uso: Aggiunta Agenti Immobiliari Non assegnati}
+    \label{tab:uc_aggiunta_agenti}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Aggiunta Agenti Immobiliari Non assegnati}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente con il ruolo di support o admin vuole assegnare un'agenzia ad un agente immobiliare privo di agenzia.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente è autenticato nel sistema e possiede il ruolo di \textbf{Admin} o \textbf{Support}.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{L'agenzia viene assegnata correttamente all'agente immobiliare precedentemente privo.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'operazione viene annullata o nessun risultato trovato (es. agenzia inesistente).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Admin, Support} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente clicca su "Unassigned Agents".} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{4}{*}{} 
+          & 1 & Clicca il proprio nome utente presente sulla navbar & \\ \cline{2-4}
+          & 2 & & Mostra M13 \\ \cline{2-4}
+          & 3 & Clicca la voce "Unassigned Agents" & \\ \cline{2-4}
+          & 4 & & Mostra M14 con la lista degli agenti non assegnati. \\ \cline{2-4}
+          & 5 & Clicca sulla voce "Assign to Agency" all'utente preferito. & \\ \hline
+          & 6 & & Mostra M15 con la lista delle agenzie presenti nel sistema. \\ \hline
+          & 7 & Seleziona l'agenzia e clicca il bottone "Assign" in M16.&  \\ \hline
+          & 8 & & Mostra M17 per confermare o annullare l'assegnazione. \\ \hline
+          & 9 & Clicca "Assign" in M17&  \\ \hline
+          
+          & 10 & & Mostra M18 "Agency Assigned Successfully". Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Tutti gli agenti sono assegnati ad un'agenzia
+          & 4a & & Mostra M20, tutti gli agenti non sono privi di agenzia \\ \cline{2-4}
+          & 5a & & Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
+
+
+% MockUp Aggiunta Agenti Immobiliari Non assegnati
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-UnassignedAgents.png}
+     \caption{MockUp Aggiunta Agenti Immobiliari Non assegnati.}
+     \label{fig:mockup_aggiunta_agenti}
+ \end{figure}
+
 
 \newpage
