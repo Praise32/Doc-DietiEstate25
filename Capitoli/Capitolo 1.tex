@@ -150,6 +150,13 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=0.8\textwidth]{images/M21DatiImmobileError}
+    \caption{Mock-up M21: Errore dati immobile richiesti (Agent-Manager-Support-Admin)}
+    \label{fig:M21}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=0.8\textwidth]{images/M10HomePageCustomer}
     \caption{Mock-up M10: Home Page (Customer)}
     \label{fig:M10}
@@ -256,9 +263,17 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
           & 7 & Clicca "Back to Home" &  \\ \hline
         \rowcolor{ucLight}
         Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
-        \textbf{Ext. A}: Credenziali Errate
-          & 4a & & Rileva dati non validi \\ \cline{2-4}
-          & 4b & & Mostra messaggio di errore. Termina UC. \\ \hline
+        \textbf{Ext. A}: La nuova password è inferiore a 6 caratteri  
+          & 4a & & Mostra M5 \\ \cline{2-4}
+          & 5a & Utente inserisce nuova password superiore a 6 caratteri e clicca "Change Password"&  \\ \cline{2-4}
+          & 6a &  &  Termina UC. \\  \hline
+
+
+          Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. B}: Nuova password e conferma nuova password non corrispondono
+          & 4b & & Mostra M6 \\ \cline{2-4}
+          & 5b & Utente inserisce nuova password che corrisponde a conferma nuova password e clicca "Change Password" &  \\ \cline{2-4}
+          & 6b &  &  Termina UC. \\  \hline
     \end{tabularx}
 \end{table}
 
@@ -301,7 +316,7 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
         
         Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema traccia la visita, la registra negli appuntamenti e notifica l'agente.} \\ \hline
         
-        Failed End Condition & \multicolumn{3}{L{11cm}|}{La prenotazione non viene effettuata; nessuna notifica all'agente.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{La prenotazione non viene effettuata; Il cliente ha effettuato la prenotazione della visita dell'immobile ed è in attesa di conferma o rifiuto.} \\ \hline
         
         Primary Actor & \multicolumn{3}{L{11cm}|}{Cliente} \\ \hline
         
@@ -327,9 +342,10 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
         \rowcolor{ucLight}
         Extensions & \textbf{Step} & \textbf{\textit{Cliente}} & \textbf{\textit{System}} \\ \hline
         
-        \textbf{Ext. A}: Cliente annulla in M7 
-          & 1a & Clicca ``X'' (Chiudi) in M7 & \\ \cline{2-4}
-          & 2a & & Ritorna a M4. Termina UC. \\ \hline
+        \textbf{Ext. A}: Prenotazione esistenza in stato di pending in M7 
+          & 4a & & Mostra M19\\ \cline{2-4}
+          & 5a & Cliente clicca "OK" in M19 &\\ \cline{2-4}
+          & 6a & & Termina UC. \\ \hline
 
     \end{tabularx}
 \end{table}
@@ -371,9 +387,11 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
           & 5 & & Mostra M9 "Property Listed Successfully". Termina UC. \\ \hline
         \rowcolor{ucLight}
         Extensions & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
-        \textbf{Ext. A}: Dati Incompleti
-          & 6a & & Rileva campi obbligatori mancanti \\ \cline{2-4}
-          & 6b & & Segnala errori nel form. Termina UC. \\ \hline
+        \textbf{Ext. A}: Dati richiesti mancanti
+          & 4a & & Rileva campi obbligatori mancanti, bottone "List Property for Sale" non cliccabile \\ \cline{2-4}
+          & 5a & L'utente inserisce i dati richiesti mancanti e clicca "List Property for Sale"&  \\ \cline{2-4}
+          & 6a & & Mostra M9 "Property Listed Successfully". Termina UC. \\ \hline
+
     \end{tabularx}
 \end{table}
 
@@ -397,7 +415,7 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
         Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente con il ruolo di support o admin vuole assegnare un'agenzia ad un agente immobiliare privo di agenzia.} \\ \hline
         Preconditions & \multicolumn{3}{L{11cm}|}{L'utente è autenticato nel sistema e possiede il ruolo di \textbf{Admin} o \textbf{Support}.} \\ \hline
         Success End Condition & \multicolumn{3}{L{11cm}|}{L'agenzia viene assegnata correttamente all'agente immobiliare precedentemente privo.} \\ \hline
-        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'operazione viene annullata o nessun risultato trovato (es. agenzia inesistente).} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'operazione non viene, non esistono agenti privi di agenzia.} \\ \hline
         Primary Actor & \multicolumn{3}{L{11cm}|}{Admin, Support} \\ \hline
         Trigger & \multicolumn{3}{L{11cm}|}{L'utente clicca su "Unassigned Agents".} \\ \hline
         \rowcolor{ucLight}
@@ -417,8 +435,7 @@ Di seguito sono riportati i mock-up delle principali schermate dell'applicazione
         \rowcolor{ucLight}
         Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
         \textbf{Ext. A}: Tutti gli agenti sono assegnati ad un'agenzia
-          & 4a & & Mostra M20, tutti gli agenti non sono privi di agenzia \\ \cline{2-4}
-          & 5a & & Termina UC. \\ \hline
+          & 4a & & Mostra M20, tutti gli agenti non sono privi di agenzia. Termina UC. \\ \hline
     \end{tabularx}
 \end{table}
 
