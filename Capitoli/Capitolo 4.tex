@@ -1,27 +1,42 @@
 % =====================================================================
-% --- CAPITOLO 4: TESTING E VALUTAZIONE DELL'USABILITÀ ---
+% --- CAPITOLO 4: VERIFICA E VALIDAZIONE ---
 % =====================================================================
-\chapter{Testing e Valutazione dell'Usabilità}
+\chapter{Verifica e Validazione}
 \label{cap:testing}
 % Riferimento Traccia: "Output: Testing e valutazione dell’usabilità"
 
-Questo capitolo descrive le strategie di verifica e validazione adottate.
+Questo capitolo descrive le strategie di verifica (statica e dinamica) e validazione adottate per garantire la qualità del software.
 
-\section{Unit Testing (xUnit)}
+\section{Verifica Statica (Analisi del Codice)}
+La verifica statica è stata condotta mediante l'utilizzo di \textbf{SonarQube}. Questa attività rientra nelle strategie di \textbf{Fault Avoidance}, mirando a rilevare difetti nel codice sorgente prima dell'esecuzione.
+
+L'analisi automatizzata ha permesso di monitorare le seguenti metriche di qualità:
+\begin{itemize}
+    \item \textbf{Code Smells:} Identificazione di strutture di codice che, pur non essendo bug, violano i principi di design (es. metodi troppo lunghi, codice duplicato) e riducono la manutenibilità.
+    \item \textbf{Cyclomatic Complexity:} Misurazione della complessità del flusso di controllo. SonarQube segnala metodi con complessità ciclomatica elevata, suggerendo refactoring per semplificare i percorsi di esecuzione e facilitare il testing.
+    \item \textbf{Reliability \& Security:} Rilevamento preventivo di potenziali bug logici e vulnerabilità di sicurezza (es. injection flaws).
+\end{itemize}
+
+\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
+
+\section{Verifica Dinamica (Unit Testing)}
 % Riferimento Traccia: "Codice xUnit per unit testing di quattro... metodi non banali..."
 % Riferimenti Slide: 27 - 29 - Verification and Validation.pdf
-% Descrivi qui le tue scelte (es. Jest per il backend Express)
+
+Per la verifica dinamica è stato utilizzato il framework \textbf{Jest}. La strategia adottata è quella del \textbf{Black-Box Testing}: i test sono stati progettati basandosi esclusivamente sulle specifiche funzionali (input e output atteso), ignorando la struttura interna del codice.
 
 \subsection{Metodo 1: [Nome Metodo Es. createAppointment]}
 \begin{description}
     \item[Descrizione Metodo] Il metodo \texttt{createAppointment(dto, userId)}...
     \item[Classi di Equivalenza (Input)]
+    Per la selezione dei casi di test, è stata applicata la tecnica del partizionamento in \textbf{Classi di Equivalenza}:
     \begin{itemize}
         \item \textbf{dto.date}: [CE1: Data futura valida], [CE2: Data passata (invalida)], [CE3: Data in formato non valido (invalida)]
         \item \textbf{userId}: [CE1: ID utente valido], [CE2: ID utente non esistente (invalido)]
-        % ...
     \end{itemize}
-    \item[Criteri di Copertura] È stato adottato il criterio R-WECT (Robust Weak Equivalence Class Testing), come visto nei progetti d'esempio (es. \texttt{docIng1.pdf, pag. 64}).
+    \item[Oracolo del Test]
+    Le asserzioni di Jest (es. \texttt{expect(...).toBe(...)}) fungono da \textbf{Oracolo}, verificando che l'output effettivo del sistema coincida con l'output atteso definito nelle specifiche.
+    \item[Criteri di Copertura] È stato adottato il criterio R-WECT (Robust Weak Equivalence Class Testing).
 \end{description}
 % Inserisci qui lo snippet di codice del test
 % \begin{lstlisting}[language=JavaScript, caption={Test per createAppointment}]

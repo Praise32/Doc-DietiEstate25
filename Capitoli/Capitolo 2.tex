@@ -22,14 +22,15 @@ L'architettura generale del sistema segue il pattern \textbf{Client-Server}, com
     \item[Server (Backend)] Un'applicazione \textbf{Node.js/Express} che gestisce la logica di business, l'autenticazione e l'accesso ai dati.
 \end{description}
 
-La comunicazione tra client e server avviene esclusivamente tramite un'API che segue lo stile architetturale \textbf{REST (Representational State Transfer)}, come approfondito nelle slide \textit{"The REST Paradigm"}. Un principio chiave di questa architettura è l'essere \textbf{stateless}. L'autenticazione non si basa su sessioni lato server, ma su \textbf{JSON Web Token (JWT)}. Questo disaccoppia l'autenticazione dal server, migliorando la \textbf{scalabilità orizzontale} (come discusso nelle slide \textit{"Modern Software Architectures"}) e permettendo a qualsiasi istanza del server di gestire qualsiasi richiesta.
+La comunicazione tra client e server avviene esclusivamente tramite un'API che segue lo stile architetturale \textbf{REST (Representational State Transfer)}. Un principio chiave di questa architettura è l'essere \textbf{stateless}. L'autenticazione non si basa su sessioni lato server, ma su \textbf{JSON Web Token (JWT)}. 
 
-Il design sfrutta inoltre un modello \textbf{Hybrid Cloud} (vedi slide \textit{"Virtualizzazione e Cloud"}):
+L'assenza di stato sul server (Statelessness) è il fattore abilitante per la \textbf{Scalabilità Orizzontale} (Horizontal Scalability): poiché ogni richiesta contiene tutte le informazioni necessarie (nel token), è possibile aggiungere nuovi nodi backend (container Docker) senza dover sincronizzare le sessioni utente, garantendo elasticità al sistema.
+
+Il design sfrutta inoltre un modello di deployment \textbf{Hybrid Cloud} (o Multi-Cloud), integrando servizi di provider diversi:
 \begin{itemize}
-    \item \textbf{PaaS (Platform as a Service):} Il database PostgreSQL è ospitato su Neon, un servizio gestito che si occupa della scalabilità e della manutenzione del database.
-    \item \textbf{IaaS (Infrastructure as a Service):} Lo storage dei file (immagini delle inserzioni) è delegato ad AWS S3, un servizio di storage a oggetti.
+    \item \textbf{PaaS (Platform as a Service):} Il database PostgreSQL è ospitato su \textbf{Neon}. Essendo un servizio gestito serverless, astrae completamente la gestione dell'hardware e del sistema operativo sottostante.
+    \item \textbf{IaaS (Infrastructure as a Service):} Lo storage dei file (immagini delle inserzioni) è delegato ad \textbf{AWS S3}. Questo servizio fornisce infrastruttura di storage a oggetti scalabile, su cui l'applicazione ha controllo diretto tramite API.
 \end{itemize}
-Questo disaccoppiamento dei servizi (applicazione, database, file) permette di scalare ogni componente in modo indipendente.
 
 \section{Stack Tecnologico e Motivazioni}
 % Riferimento Traccia: "Descrizione e motivazione delle scelte tecnologiche adottate."
@@ -48,32 +49,26 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
 % Riferimenti Slide: 
 % 20 - Standard Software Architectures.pdf (3-Tier)
 % 19 - 20 -Design Patterns.pdf (DAO, Facade, Chain of Responsibility, Strategy)
-% docIng1.pdf, docIng2.pdf (Esempi di applicazione)
 
-\subsection{Architettura a 3 Livelli (3-Tier)}
-% Riferimento: Slide "Architetture a 3 livelli" (20 - Standard Software Architectures.pdf, Pag 37)
-Il backend Express è strutturato logicamente secondo un'architettura a 3 livelli, simile a quella vista nei progetti d'esempio:
+\subsection{Architettura a 3 Livelli (3-Tier Architecture)}
+Il backend Express è strutturato logicamente secondo una \textbf{3-Tier Architecture}, separando nettamente le responsabilità:
 \begin{itemize}
-    \item \textbf{Presentation Layer (Controller):} I file di routing in \texttt{src/api/routes/} agiscono da Controller. Ricevono le richieste HTTP, le validano (tramite Zod e middleware) e invocano il livello di business.
-    \item \textbf{Business Logic Layer (Service):} Implementato dai nostri \textit{repository} (in \texttt{src/repository/}) e dai servizi in \texttt{src/utils/} (es. geocoding, email). Qui risiede la logica applicativa.
-    \item \textbf{Data Access Layer (DAO):} Implementato tramite l'ORM Drizzle e le definizioni in \texttt{src/db/schema/}.
+    \item \textbf{Presentation Layer:} Gestito dai Controller (Routes), si occupa di ricevere le richieste HTTP e validare l'input.
+    \item \textbf{Application Logic Layer:} Gestito dai Service, contiene la logica di business e le regole del dominio.
+    \item \textbf{Data Layer:} Gestito dai Repository/DAO, si occupa della persistenza e del recupero dei dati.
 \end{itemize}
 
 \subsection{Repository Pattern (DAO)}
-% Riferimento: Slide "Data Access Object" (19 - 20 -Design Patterns.pdf, Pag 10)
-Per disaccoppiare la logica di business dalle query, è stato implementato il \textbf{Repository Pattern} (noto come \textbf{DAO} nelle slide del corso). I file in \texttt{src/repository/} (es. \texttt{posts.repository.ts}) incapsulano tutta la logica di accesso ai dati, fornendo metodi puliti al livello di business (es. \texttt{findPostById}).
+Per disaccoppiare la logica di business dai dettagli implementativi del database, è stato implementato il \textbf{Repository Pattern}, accademicalmente noto come \textbf{DAO (Data Access Object)}. I file in \texttt{src/repository/} incapsulano le query Drizzle, fornendo un'interfaccia astratta al livello superiore.
 
 \subsection{Strategy Pattern (Passport.js)}
-% Riferimento: Slide "GoF Design Pattern" (19 - 20 -Design Patterns.pdf, Pag 15)
-Per l'autenticazione, la libreria Passport.js implementa lo \textbf{Strategy Pattern}. Questo ci ha permesso di definire strategie multiple e intercambiabili (JWT, Google, Local) senza modificare la logica di autenticazione principale.
+Per la gestione dell'autenticazione è stato utilizzato lo \textbf{Strategy Pattern} tramite la libreria Passport.js. Questo pattern comportamentale permette di definire una famiglia di algoritmi (le strategie di login: \textit{Local Strategy}, \textit{Google OAuth Strategy}, \textit{JWT Strategy}), incapsularli e renderli intercambiabili a runtime senza modificare il client che li utilizza.
 
 \subsection{Facade Pattern (API Routes)}
-% Riferimento: Slide "Facade Pattern" (19 - 20 -Design Patterns.pdf, Pag 59)
-I nostri file di routing (es. \texttt{posts.router.ts}) agiscono come un \textbf{Facade}. Forniscono un'interfaccia API semplice (es. \texttt{POST /api/posts}) che nasconde la complessità sottostante (autenticazione, upload S3, validazione, scrittura DB, invio email).
+I file di routing (es. \texttt{posts.router.ts}) implementano il \textbf{Facade Pattern}. Essi forniscono un'interfaccia unificata e semplificata (l'endpoint REST) a un insieme di interfacce in un sottosistema (validazione, upload S3, scrittura DB, invio email), nascondendo la complessità della logica di business al client.
 
-\subsection{Middleware (Chain of Responsibility)}
-% Riferimento: Slide "GoF Design Pattern" (19 - 20 -Design Patterns.pdf, Pag 15)
-Express utilizza il pattern \textbf{Middleware}, concettualmente simile al \textbf{Chain of Responsibility}. Le nostre funzioni in \texttt{src/api/middleware/} (es. \texttt{authMiddleware}, \texttt{requireRole}) formano una catena che processa la richiesta, dove ogni anello ha una singola responsabilità.
+\subsection{Chain of Responsibility (Middleware)}
+L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al successivo (\texttt{next()}) o interrompere il flusso (inviando una risposta di errore), disaccoppiando il mittente della richiesta dai ricevitori.
 
 \section{Pattern di Design del Frontend (Angular)}
 % Riferimento Traccia: "...design dell’interfaccia utente..."
@@ -81,24 +76,20 @@ Express utilizza il pattern \textbf{Middleware}, concettualmente simile al \text
 % 21 - MVC.pdf (MVC, Observer)
 % 19 - 20 -Design Patterns.pdf (Observer)
 % 25 - 26 - REST APIs.pdf (IoC)
-% docIng2.pdf (MVVM)
 
 \subsection{Architettura a Componenti (MVVM)}
-% Riferimento: Slide "Model – View – Controller (MVC)" (21 - MVC.pdf) e Progetto (docIng2.pdf, Pag 44)
-Il frontend Angular non implementa il classico pattern \textbf{MVC}, ma la sua evoluzione moderna: l'\textbf{Architettura a Componenti}, che si allinea al pattern \textbf{MVVM (Model-View-ViewModel)}:
+Il frontend adotta un'\textbf{Architettura a Componenti}, un'evoluzione del pattern MVC assimilabile al pattern \textbf{MVVM (Model-View-ViewModel)}:
 \begin{itemize}
-    \item \textbf{Model:} Rappresentato dai nostri Servizi (es. \texttt{AuthService}, \texttt{AppointmentsService}) che gestiscono i dati e la logica di business.
-    \item \textbf{View:} I template HTML dei componenti (\texttt{.html}), che definiscono la UI in modo dichiarativo.
-    \item \textbf{ViewModel:} Le classi TypeScript dei componenti (\texttt{.ts}), che collegano la View ai Servizi, esponendo dati e gestendo gli eventi.
+    \item \textbf{Model:} I Servizi Angular che gestiscono i dati e la logica di business.
+    \item \textbf{View:} Il template HTML (struttura) e CSS (stile), privi di logica complessa.
+    \item \textbf{ViewModel:} La classe TypeScript del componente, che espone proprietà e metodi alla View tramite Data Binding.
 \end{itemize}
 
 \subsection{Observer Pattern (RxJS)}
-% Riferimento: Slide "Observer (Behavioral)" (19 - 20 -Design Patterns.pdf, Pag 19)
-Il pattern \textbf{Observer} è centrale in Angular ed è implementato tramite \textbf{RxJS}. I servizi (Soggetti) espongono flussi di dati come \texttt{Observable}, e i componenti (Osservatori) si iscrivono (\texttt{subscribe}) per reagire ai cambiamenti di stato. Questo permette l'accoppiamento lasco tra Model e View descritto nelle slide del corso.
+La gestione degli eventi asincroni e della comunicazione tra componenti è realizzata tramite la libreria \textbf{RxJS}, che implementa l'\textbf{Observer Pattern}. I servizi espongono flussi di dati sotto forma di \texttt{Observable} (Soggetti), ai quali i componenti si iscrivono (\texttt{subscribe}) fungendo da Osservatori. Questo garantisce un basso accoppiamento e una gestione reattiva degli aggiornamenti di stato.
 
-\subsection{Dependency Injection (IoC)}
-% Riferimento: Slide "Inversion of Control (IoC) Principle" (25 - 26 - REST APIs.pdf, Pag 32)
-Angular implementa il pattern \textbf{Dependency Injection (DI)}, una forma di \textbf{Inversion of Control (IoC)}. I nostri componenti non creano le loro dipendenze (es. \texttt{AuthService}), ma le "richiedono" nel costruttore. Il framework le "inietta" automaticamente, promuovendo un codice disaccoppiato e testabile.
+\subsection{Inversion of Control (IoC) e Dependency Injection}
+Angular implementa nativamente il principio di \textbf{Inversion of Control (IoC)} attraverso il meccanismo della \textbf{Dependency Injection (DI)}. I componenti non istanziano direttamente le proprie dipendenze (es. \texttt{new AuthService()}), ma le dichiarano nel costruttore. È il framework (l'Injector) a occuparsi della creazione e dell'iniezione delle istanze, migliorando la modularità e la testabilità del codice.
 
 \section{Schema per la Persistenza Dati}
 % Riferimento Traccia: "Descrizione dello schema per la persistenza dati."
