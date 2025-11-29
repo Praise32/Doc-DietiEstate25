@@ -110,6 +110,60 @@ Lo schema dati è stato definito utilizzando Drizzle ORM (vedi \texttt{src/db/sc
 \textit{[Placeholder per il Diagramma delle Classi di Design UML.]}
 
 \section{Diagrammi di Sequenza di Design}
-% Riferimento Traccia: "Diagrammi di sequenza di design per i casi d’uso..."
+% Riferimento Traccia: "Diagrammi di sequenza di design per i casi d'uso..."
 % Inserisci qui i diagrammi di sequenza per i 4 casi d'uso scelti.
 \textit{[Placeholder per i Diagrammi di Sequenza UML (es. Prenotazione Visita, Ricerca Immobile, etc.).]}
+
+\section{Design System e Psicologia del Colore}
+Il design dell'interfaccia utente è stato sviluppato seguendo i principi fondamentali dell'HCI 
+(Human-Computer Interaction), con l'obiettivo primario di ridurre il carico cognitivo dell'utente 
+e garantire una chiara gerarchia visiva. In quest'ottica, la scelta della palette cromatica non è 
+puramente estetica, ma funzionale: ogni colore è stato selezionato per comunicare uno stato specifico 
+del sistema e guidare l'utente attraverso i flussi di navigazione, rispettando la regola del 
+\textbf{60-30-10} (60\% colore primario/neutro, 30\% secondario, 10\% accento).
+
+\subsection{La Palette Primaria}
+Per la progettazione del prodotto software è stata selezionata una combinazione cromatica fondata 
+sul contrasto tra i toni scuri (Dark Grey/Nero) e lo spazio bianco (White/Neutral), che risponde 
+a precise esigenze psicologiche e funzionali.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Palette.png}
+    \caption{Palette cromatica del sistema DietiEstates25}
+    \label{fig:palette}
+\end{figure}
+
+\vspace{0.3cm}
+
+Il nero scuro (come il \texttt{\#1F2937}) è stato scelto perché, dal punto di vista della psicologia 
+del colore, è intrinsecamente associato all'eleganza, al potere e all'autorità. Nell'interfaccia, 
+esso agisce come ancora visiva: comunica stabilità e professionalità, guidando l'occhio dell'utente 
+sugli elementi strutturali e interattivi con decisione, senza però risultare aggressivo grazie alle 
+sfumature antracite.
+
+\vspace{0.3cm}
+
+Il bianco e i toni neutri (come \texttt{\#F9FAFB}), invece, rappresentano chiarezza, pulizia e respiro. 
+L'uso intenzionale dello spazio bianco (whitespace) serve a organizzare l'informazione, creando un 
+senso di ordine che previene il sovraccarico cognitivo e permette agli elementi colorati (semantici) 
+di risaltare per contrasto.
+
+\vspace{0.3cm}
+
+Questa combinazione crea un ambiente visivo che ispira efficienza, modernità e controllo. Mentre il 
+nero definisce la gerarchia e l'azione, il bianco garantisce la leggibilità e la tranquillità visiva. 
+Insieme, questi elementi costituiscono una base neutrale che permette ai colori semantici (come il 
+verde per il successo o il rosso per l'errore) di emergere con forza solo quando necessario, garantendo 
+un'esperienza utente focalizzata e priva di distrazioni.
+
+\vspace{0.3cm}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/ColorContrastChecker.png}
+    \caption{Contrast ratio dei colori principali del sistema}
+    \label{fig:ColorContrastChecker}
+\end{figure}
+
+% =====================================================================
+
