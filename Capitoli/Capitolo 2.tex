@@ -68,7 +68,7 @@ Per la gestione dell'autenticazione è stato utilizzato lo \textbf{Strategy Patt
 I file di routing (es. \texttt{posts.router.ts}) implementano il \textbf{Facade Pattern}. Essi forniscono un'interfaccia unificata e semplificata (l'endpoint REST) a un insieme di interfacce in un sottosistema (validazione, upload S3, scrittura DB, invio email), nascondendo la complessità della logica di business al client.
 
 \subsection{Chain of Responsibility (Middleware)}
-L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al successivo (\texttt{next()}) o interrompere il flusso (inviando una risposta di errore), disaccoppiando il mittente della richiesta dai ricevitori.
+L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al successivo (\texttt{next()}) o interrompere il flusso (inviando una risposta di errore), disaccoppiando il mittente della richiesta dai ricevatori.
 
 \section{Pattern di Design del Frontend (Angular)}
 % Riferimento Traccia: "...design dell’interfaccia utente..."
@@ -164,6 +164,38 @@ un'esperienza utente focalizzata e priva di distrazioni.
     \caption{Contrast ratio dei colori principali del sistema}
     \label{fig:ColorContrastChecker}
 \end{figure}
+
+\subsection{Pagina Home}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Homepage.png}
+    \caption{Contrast ratio dei colori principali del sistema}
+    \label{fig:Dashboard principale}
+\end{figure}
+Qui è rappresentata la Home del sistema, che funge da hub operativo immediato fin dal primo avvio. 
+Si è scelto di superare il concetto di pagina di benvenuto statica in favore di una Dashboard di Ricerca, 
+riducendo così la distanza tra l'utente e il suo obiettivo. La barra centrale permette un filtraggio 
+rapido basato su descrizione e città, indirizzando subito l'utente verso i risultati pertinenti.
+
+\vspace{0.3cm}
+
+Parallelamente, l'integrazione della mappa interattiva laterale supporta l'esplorazione spaziale: 
+è stato implementato un meccanismo di feedback sincronizzato che colora il placeholder sulla mappa 
+quando il cursore viene posizionato sulla relativa inserzione. Questa scelta di design non solo 
+migliora la comprensione del contesto geografico, ma offre percorsi di navigazione flessibili per 
+adattarsi ai diversi modelli mentali degli utenti.
+
+\section{Analisi del Design}
+La progettazione dell'interfaccia è stata guidata dalla volontà di mantenere un design pulito e 
+minimale, finalizzato a comunicare eleganza e professionalità. Si è scelto di evitare il disordine 
+visivo (visual clutter) per ridurre il carico cognitivo dell'utente, permettendogli di focalizzarsi 
+immediatamente sui task principali.
+
+\vspace{0.3cm}
+
+In quest'ottica i pulsanti per il Login, la Ricerca e la visualizzazione degli immobili adottano una tonalità 
+scura dominante che serve ad attirare l'attenzione e a incentivare l'interazione verso le funzionalità 
+principali del sistema.
 
 % =====================================================================
 
