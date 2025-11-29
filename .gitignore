@@ -23,6 +23,7 @@
 *.xdv
 *.toc
 *.pdf
+*.synctex.gz
 
 # LaTeX build dirs
 _build/
