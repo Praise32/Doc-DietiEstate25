@@ -41,6 +41,30 @@ L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibil
     i permessi di accesso, proteggendo il ramo principale da modifiche non autorizzate o accidentali.
 \end{itemize}
 
+\section{Report di Qualità del Codice (SonarQube)}
+La qualità del software non si misura solo attraverso il corretto funzionamento delle funzionalità, 
+ma anche tramite la struttura interna del codice sorgente. Adottare standard elevati di Clean Code 
+è essenziale per garantire la sostenibilità del progetto: un codice pulito riduce il debito tecnico, 
+accelera l'inserimento di nuovi sviluppatori e semplifica le future fasi di manutenzione ed evoluzione, 
+minimizzando il rischio di regressioni.
+
+\subsection{Analisi Statica con SonarQube}
+Per oggettivare la qualità del software prodotto, il team ha integrato nel flusso di sviluppo SonarQube, una piattaforma di analisi statica automatizzata. Questo strumento esegue una scansione continua del codice, evidenziando le aree critiche e fornendo metriche precise per guidare le attività di refactoring.
+
+L'analisi si è focalizzata sulle seguenti metriche chiave:
+
+\begin{itemize}
+    \item \textbf{Bugs (Affidabilità):} Identificano errori di logica o di programmazione che porteranno quasi sicuramente a un malfunzionamento o a un crash dell'applicazione in fase di esecuzione. La loro risoluzione ha priorità massima per garantire la stabilità del sistema.
+
+    \item \textbf{Vulnerabilità (Sicurezza):} Segnalano punti deboli nel codice che potrebbero essere sfruttati da attacchi esterni (come Injection o esposizione di dati sensibili). Monitorare questo indice è cruciale per garantire la sicurezza dei dati e l'integrità del sistema.
+
+    \item \textbf{Code Smells (Manutenibilità):} Non si tratta di errori bloccanti, ma di violazioni delle buone pratiche di programmazione (es. classi troppo grandi, complessità ciclomatica elevata, nomi di variabili poco chiari). Se trascurati, rendono il codice difficile da leggere e modificare, aumentando i costi di manutenzione futuri.
+
+    \item \textbf{Duplicazioni (Ridondanza):} Rilevano blocchi di codice identici ripetuti in più punti (violazione del principio DRY - Don't Repeat Yourself). Le duplicazioni sono pericolose perché richiedono che ogni modifica venga replicata manualmente in tutti i punti, aumentando il rischio di errore umano.
+\end{itemize}
+
+\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
+
 \section{Containerizzazione (Dockerfile)}
 % Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
 % Riferimenti Slide: 24 - Virtualizzazione e Cloud.pdf
