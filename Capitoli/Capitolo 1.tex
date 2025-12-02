@@ -1,8 +1,120 @@
 % =====================================================================
 % --- CAPITOLO 1: REQUISITI SOFTWARE ---
 % =====================================================================
-\chapter{Requisiti Software}
-Questo capitolo descrive i requisiti funzionali e non funzionali del sistema DietiEstates25.
+\chapter{Analisi dei Requisiti}
+\label{cap:requisiti}
+Questo capitolo definisce formalmente i requisiti del sistema DietiEstates25. L'analisi si concentra 
+sull'identificazione degli attori che interagiscono con la piattaforma, sulla specifica dei vincoli 
+qualitativi (requisiti non funzionali) e sulle regole di business (requisiti di dominio) che governano 
+il comportamento dell'applicazione.
+
+\section{Identificazione degli Attori del Sistema}
+
+Sulla base dell'analisi delle esigenze operative, sono stati individuati cinque ruoli distinti, ciascuno 
+caratterizzato da specifici privilegi e responsabilità all'interno della piattaforma.
+
+\begin{itemize}
+    \item \textbf{Admin (Amministratore di Sistema):} Rappresenta il livello gerarchico più alto. 
+    L'Admin accede al sistema tramite credenziali predefinite e possiede il controllo globale sulla 
+    piattaforma. Le sue responsabilità includono:
+    \begin{itemize}
+        \item Gestione completa degli annunci immobiliari e delle agenzie.
+        \item Gestione e supervisione degli appuntamenti a livello globale.
+        \item Creazione e gestione degli account privilegiati (Support, Manager, Agent) tramite il 
+        sistema di inviti via email.
+    \end{itemize}
+
+    \item \textbf{Support (Operatore di Supporto):} È una figura operativa trasversale, concepita per 
+    coadiuvare l'Amministratore. Possiede privilegi simili a quelli dell'Admin per garantire la continuità 
+    operativa e la manutenzione dei contenuti, pur con lievi limitazioni sui permessi di gestione critica 
+    del sistema.
+
+    \item \textbf{Manager (Gestore di Agenzia):} È la figura responsabile dell'amministrazione di una 
+    specifica agenzia immobiliare. Le sue competenze sono circoscritte al perimetro della propria agenzia:
+    \begin{itemize}
+        \item Creazione e configurazione della propria agenzia.
+        \item Gestione del team di Agenti immobiliari afferenti alla sua struttura (inclusa la creazione 
+        di nuovi account Agent tramite invito).
+        \item Supervisione delle proprietà e degli appuntamenti associati alla propria agenzia.
+    \end{itemize}
+
+    \item \textbf{Agent (Agente Immobiliare):} Figura operativa focalizzata sulla vendita e l'affitto. 
+    L'Agente ha autonomia nella creazione e gestione dei propri annunci immobiliari e si occupa di gestire 
+    la propria agenda di appuntamenti con i clienti.
+
+    \item \textbf{Customer (Cliente):} Rappresenta l'utente finale che fruisce dei servizi della piattaforma. 
+    Il Customer può navigare liberamente tra le inserzioni, visualizzare i dettagli degli immobili e 
+    richiedere appuntamenti. Ha inoltre accesso a un'area personale per monitorare lo stato delle proprie 
+    richieste (es. confermate, in attesa o rifiutate).
+\end{itemize}
+
+\section{Requisiti Non Funzionali}
+
+I requisiti non funzionali definiscono gli attributi di qualità del sistema, imponendo vincoli sulle 
+modalità con cui le funzionalità devono essere erogate.
+
+\begin{itemize}
+    \item \textbf{Paradigma di Sviluppo:} Il sistema deve essere progettato e implementato seguendo 
+    rigorosamente il paradigma Orientato agli Oggetti (Object-Oriented), garantendo modularità e 
+    manutenibilità del codice.
+
+    \item \textbf{Usabilità e Interfaccia:} Il sistema deve presentare un'interfaccia utente (UI) 
+    intuitiva, conforme ai principi di Human-Centered Design, che garantisca una chiara gerarchia 
+    visiva delle informazioni relative agli immobili.
+
+    \item \textbf{Prestazioni ed Efficienza:} Il motore di ricerca deve garantire tempi di risposta 
+    inferiori ai 2 secondi per il 99\% delle query effettuate, assicurando un'esperienza utente fluida 
+    anche con elevati volumi di dati.
+
+    \item \textbf{Sicurezza:} Il sistema deve implementare protocolli sicuri per l'archiviazione e la 
+    gestione delle credenziali degli utenti, proteggendo i dati sensibili da accessi non autorizzati.
+
+    \item \textbf{Accessibilità e Curva di Apprendimento:}
+    \begin{itemize}
+        \item Per i Customer: L'utilizzo delle funzionalità core (ricerca, prenotazione) deve essere 
+        immediato e non richiedere alcuna formazione pregressa ("Walk-up-and-use").
+        \item Per gli Operatori (Admin, Manager, Agent): L'interfaccia di gestione deve permettere di 
+        raggiungere la piena operatività con un training minimo (inferiore ai 30 minuti), minimizzando 
+        il tasso di errore operatore durante l'uso prolungato.
+    \end{itemize}
+
+    \item \textbf{Affidabilità:} Il sistema deve garantire un Service Level Agreement (SLA) con un 
+    tempo di disponibilità (uptime) del 99\% su base mensile.
+\end{itemize}
+
+\section{Requisiti di Dominio}
+
+I requisiti di dominio specificano vincoli derivanti dal contesto operativo e normativo del settore 
+immobiliare in cui il sistema opera.
+
+\begin{itemize}
+    \item \textbf{Gestione Inserzioni:} La facoltà di caricare e pubblicare nuovi annunci immobiliari 
+    è riservata esclusivamente ai ruoli operativi (Admin, Support, Manager, Agent). L'utente con ruolo 
+    Customer non dispone dei privilegi di scrittura per le inserzioni.
+
+    \item \textbf{Gestione Agenti e Assegnazione:} Il sistema deve prevedere una funzionalità dedicata 
+    per gli amministratori (Admin) e il supporto tecnico (Support) che permetta di visualizzare l'elenco 
+    degli agenti immobiliari non ancora affiliati ad alcuna agenzia. Tale funzionalità deve consentire 
+    l'assegnazione operativa di questi agenti a una specifica agenzia esistente.
+
+    \item \textbf{Conformità Normativa:} In fase di creazione dell'annuncio, il sistema deve validare 
+    la presenza di informazioni obbligatorie secondo la normativa vigente, tra cui: classe energetica 
+    (D.Lgs. 192/2005), metratura commerciale, numero di vani e prezzo.
+
+    \item \textbf{Supporto Decisionale (Meteo e Mappa):} Il sistema deve integrare servizi di terze 
+    parti per arricchire l'esperienza di prenotazione:
+    \begin{itemize}
+        \item Una mappa interattiva per la geolocalizzazione precisa dell'immobile.
+        \item Un widget per le previsioni meteo in tempo reale, per supportare l'utente nella scelta 
+        ottimale della data per la visita in loco.
+    \end{itemize}
+
+    \item \textbf{Categorizzazione e Ricerca Flessibile:} Il sistema deve classificare primariamente 
+    gli immobili in base alla tipologia contrattuale (Vendita o Affitto). Sebbene non sia imposta una 
+    tassonomia rigida per la tipologia edilizia (es. menu a tendina bloccati), il sistema deve permettere 
+    il filtraggio e la ricerca avanzata basata sulle caratteristiche descrittive inserite, garantendo 
+    flessibilità nel reperimento dell'immobile desiderato.
+\end{itemize}
 
 \section{Glossario}
 \begin{description}
