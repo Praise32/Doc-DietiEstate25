@@ -1,0 +1,323 @@
+%% =====================================================================
+% --- CAPITOLO 5: Motivazioni scelte di design ---
+% =====================================================================
+\chapter{Motivazioni delle Scelte di Design}
+\label{cap:motivazioni}
+
+
+\section{Design System e Psicologia del Colore}
+Il design dell'interfaccia utente è stato sviluppato seguendo i principi fondamentali dell'HCI 
+(Human-Computer Interaction), con l'obiettivo primario di ridurre il carico cognitivo dell'utente 
+e garantire una chiara gerarchia visiva. In quest'ottica, la scelta della palette cromatica non è 
+puramente estetica, ma funzionale: ogni colore è stato selezionato per comunicare uno stato specifico 
+del sistema e guidare l'utente attraverso i flussi di navigazione, rispettando la regola del 
+\textbf{60-30-10} (60\% colore primario/neutro, 30\% secondario, 10\% accento).
+
+\subsection{La Palette Primaria}
+Per la progettazione del prodotto software è stata selezionata una combinazione cromatica fondata 
+sul contrasto tra i toni scuri (Dark Grey/Nero) e lo spazio bianco (White/Neutral), che risponde 
+a precise esigenze psicologiche e funzionali.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Palette.png}
+    \caption{Palette cromatica del sistema DietiEstates25}
+    \label{fig:palette}
+\end{figure}
+
+\vspace{0.3cm}
+
+Il nero scuro (come il \texttt{\#1F2937}) è stato scelto perché, dal punto di vista della psicologia 
+del colore, è intrinsecamente associato all'eleganza, al potere e all'autorità. Nell'interfaccia, 
+esso agisce come ancora visiva: comunica stabilità e professionalità, guidando l'occhio dell'utente 
+sugli elementi strutturali e interattivi con decisione, senza però risultare aggressivo grazie alle 
+sfumature antracite.
+
+\vspace{0.3cm}
+
+Il bianco e i toni neutri (come \texttt{\#F9FAFB}), invece, rappresentano chiarezza, pulizia e respiro. 
+L'uso intenzionale dello spazio bianco (whitespace) serve a organizzare l'informazione, creando un 
+senso di ordine che previene il sovraccarico cognitivo e permette agli elementi colorati (semantici) 
+di risaltare per contrasto.
+
+\vspace{0.3cm}
+
+Questa combinazione crea un ambiente visivo che ispira efficienza, modernità e controllo. Mentre il 
+nero definisce la gerarchia e l'azione, il bianco garantisce la leggibilità e la tranquillità visiva. 
+Insieme, questi elementi costituiscono una base neutrale che permette ai colori semantici (come il 
+verde per il successo o il rosso per l'errore) di emergere con forza solo quando necessario, garantendo 
+un'esperienza utente focalizzata e priva di distrazioni.
+
+\vspace{0.3cm}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/ColorContrastChecker.png}
+    \caption{Contrast ratio dei colori principali del sistema}
+    \label{fig:ColorContrastChecker}
+\end{figure}
+
+\subsection{Dashboard Principale}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Homepage.png}
+    \caption{Contrast ratio dei colori principali del sistema}
+    \label{fig:Dashboard principale}
+\end{figure}
+Qui è rappresentata la Home del sistema, che funge da hub operativo immediato fin dal primo avvio. 
+Si è scelto di superare il concetto di pagina di benvenuto statica in favore di una Dashboard di Ricerca, 
+riducendo così la distanza tra l'utente e il suo obiettivo. La barra centrale permette un filtraggio 
+rapido basato su descrizione e città, indirizzando subito l'utente verso i risultati pertinenti.
+
+\vspace{0.3cm}
+
+Parallelamente, l'integrazione della mappa interattiva laterale supporta l'esplorazione spaziale: 
+è stato implementato un meccanismo di feedback sincronizzato che colora il placeholder sulla mappa 
+quando il cursore viene posizionato sulla relativa inserzione. Questa scelta di design non solo 
+migliora la comprensione del contesto geografico, ma offre percorsi di navigazione flessibili per 
+adattarsi ai diversi modelli mentali degli utenti.
+
+\section{Analisi del Design}
+La progettazione dell'interfaccia è stata guidata dalla volontà di mantenere un design pulito e 
+minimale, finalizzato a comunicare eleganza e professionalità. Si è scelto di evitare il disordine 
+visivo (visual clutter) per ridurre il carico cognitivo dell'utente, permettendogli di focalizzarsi 
+immediatamente sui task principali.
+
+\vspace{0.3cm}
+
+In quest'ottica i pulsanti per il Login, la Ricerca e la visualizzazione degli immobili adottano una tonalità 
+scura dominante che serve ad attirare l'attenzione e a incentivare l'interazione verso le funzionalità 
+principali del sistema.
+
+\subsection{Pagine di accesso e registrazione}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Login.png}
+    \caption{Pagina di accesso: Login}
+    \label{fig:Login}
+\end{figure}
+
+Per le interfacce di autenticazione e registrazione, è stato adottato un design che applica il 
+\textbf{Principio della Regione Comune della Gestalt}. Questa scelta architettonica non è puramente 
+estetica, ma funzionale all'usabilità: delimitando visivamente l'area di input tramite un contenitore 
+(card), si organizza l'informazione e si guida l'attenzione dell'utente sugli elementi attivi, 
+riducendo le distrazioni esterne.
+
+\vspace{0.3cm}
+
+A differenza di sistemi che frammentano l'accesso su portali diversi, si è scelto di mantenere un 
+punto di ingresso unico per tutte le tipologie di utente. Questa strategia massimizza la 
+\textbf{coerenza interna del sistema}, semplificando il modello mentale necessario per l'accesso. 
+La differenziazione dei privilegi avviene tramite una logica di backend trasparente all'utente:
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item \textbf{Utenti Customer (Registrazione Autonoma):} La registrazione pubblica tramite questa 
+    interfaccia assegna di default il ruolo "Customer". Questo garantisce un accesso immediato e senza 
+    frizioni (frictionless) alle funzionalità core come la ricerca e il salvataggio degli immobili.
+
+    \item \textbf{Ruoli Amministrativi (Invitation-Based):} Per i ruoli critici (Agent, Manager, Support), 
+    al fine di garantire la sicurezza e la corretta attribuzione dei privilegi, l'accesso non è consentito 
+    tramite registrazione pubblica. Il flusso di onboarding avviene esclusivamente tramite un invito via 
+    email generato dagli amministratori. L'utente riceve un link univoco che lo indirizza a una procedura 
+    pre-configurata, associandolo automaticamente al ruolo specifico senza necessità di configurazioni 
+    manuali o interfacce separate.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Register.png}
+    \caption{Pagina di accesso: Registrazione}
+    \label{fig:Register}
+\end{figure}
+
+\subsection{Pagina Listing Property}
+
+Per l'interfaccia di inserimento di un nuovo immobile, si è scelto di adottare un layout a 
+\textbf{pagina singola (Single Page Form)}, che rievoca la metafora del modulo cartaceo. A differenza 
+di un approccio a step sequenziali (wizard), questa soluzione permette all'utente di avere una visione 
+d'insieme immediata di tutti i dati richiesti, facilitando la compilazione e la revisione delle 
+informazioni in un unico contesto fluido.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M8Sell.png}
+    \caption{Pagina Listing Property}
+    \label{fig:ListingProperty}
+\end{figure}
+\vspace{0.3cm}
+
+\textbf{Strategia di Categorizzazione e Ricerca Semantica}
+
+Una decisione progettuale cruciale riguarda la modalità di classificazione dell'immobile. Si è 
+deliberatamente evitato l'uso di selettori rigidi per la categoria (es. menu a tendina "Villa", 
+"Appartamento", "Monolocale"). L'obiettivo è incentivare l'inserzionista a compilare il campo 
+Descrizione con la massima precisione e ricchezza di dettagli.
+
+\vspace{0.3cm}
+
+Questa scelta ha un doppio vantaggio:
+
+\begin{itemize}
+    \item \textbf{Flessibilità per il Venditore:} L'utente ha la libertà di definire il target della 
+    proprietà attraverso l'uso di parole chiave naturali o "tag" nel testo (es. specificando "ideale 
+    per Studenti", "uso investimento", "loft open space").
+
+    \item \textbf{Ottimizzazione della Ricerca:} Il motore di ricerca interno indicizza l'intero corpo 
+    della descrizione. Di conseguenza, più l'inserzionista è dettagliato, maggiore sarà la visibilità 
+    dell'annuncio per le query specifiche degli acquirenti. Questo meccanismo premia la qualità 
+    dell'informazione e migliora il matching tra domanda e offerta.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Prevenzione degli Errori e Vincoli}
+
+Per garantire l'integrità dei dati, è stato applicato il principio dei \textbf{Vincoli (Constraints)} 
+di Norman:
+
+\begin{itemize}
+    \item \textbf{Pulsante di Invio Disabilitato:} Il pulsante finale "List Property for Sale" rimane 
+    in stato disabilitato (visivamente grigio e non cliccabile) finché tutti i campi obbligatori non 
+    sono stati compilati correttamente. Questo fornisce un feedback passivo all'utente, segnalando 
+    che il processo non è ancora completo e prevenendo l'invio di form incompleti.
+
+    \item \textbf{Input Guidati:} Per campi critici come "Listing Type" (Vendita/Affitto), l'uso di 
+    radio button elimina l'ambiguità, costringendo l'utente a una scelta mutuamente esclusiva ed 
+    evitando errori di digitazione.
+\end{itemize}
+
+\subsection{Pagina Gestione Appuntamenti}
+
+Per la gestione dell'agenda degli agenti, è stato implementato un sistema di visualizzazione duale 
+che offre all'utente la massima flessibilità operativa. Riconoscendo che diversi task richiedono 
+diverse rappresentazioni dei dati, l'interfaccia permette di alternare istantaneamente tra due 
+modalità complementari tramite un apposito selettore (toggle):
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item \textbf{Vista Lista (List View):} Questa modalità è ottimizzata per una consultazione rapida 
+    e analitica. Gli appuntamenti sono presentati come card indipendenti, ordinate cronologicamente. 
+    Questo approccio favorisce la scansione verticale (scanning), permettendo all'agente di elaborare 
+    sequenzialmente le richieste e accedere immediatamente ai dettagli di contatto.
+
+    \item \textbf{Vista Calendario (Calendar View):} Questa modalità offre una visione d'insieme a 
+    360 gradi ("The Big Picture"). Mappando gli eventi su una griglia temporale (mensile, settimanale 
+    o giornaliera), l'utente percepisce immediatamente la distribuzione del carico di lavoro e la 
+    disponibilità oraria, facilitando le attività di pianificazione a medio-lungo termine.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Calendar.png}
+    \caption{Calendario Appuntamenti}
+    \label{fig:Calendar Appuntamenti}
+\end{figure}
+
+\vspace{0.3cm}
+È stato applicato il \textbf{principio di Similarità della Gestalt}: gli stati degli appuntamenti 
+mantengono lo stesso codice cromatico sia come bordo decorativo nella List View, sia come indicatore 
+(dot) nella Calendar View.
+
+\begin{itemize}
+    \item \textbf{Verde (Confirmed):} Indica un appuntamento confermato. Il colore trasmette stabilità 
+    e azione positiva.
+
+    \item \textbf{Arancione (Pending):} Indica una richiesta in attesa di approvazione. Il colore di 
+    allerta attira l'attenzione dell'agente sulla necessità di un intervento decisionale.
+
+    \item \textbf{Rosso (Rejected):} Indica un appuntamento rifiutato o cancellato, segnalando visivamente 
+    lo stato di arresto del processo.
+\end{itemize}
+
+\vspace{0.3cm}
+
+Questa ridondanza visiva permette all'utente di riconoscere lo stato di un appuntamento in frazioni 
+di secondo (pre-attentive processing), riducendo il carico cognitivo necessario per leggere le 
+etichette testuali.
+
+\subsection{Pagine di Ricerca Specifica: Buy e Rent}
+
+Le sezioni "Buy" e "Rent" condividono un layout speculare per garantire la \textbf{Coerenza Interna}, 
+permettendo all'utente di applicare lo stesso modello mentale a contesti diversi. La barra dei filtri 
+avanzata organizza i parametri di ricerca (prezzo, stanze, tipologia) sfruttando il principio della 
+\textbf{Regione Comune} per facilitare la scansione visiva.
+
+\vspace{0.3cm}
+
+I risultati vengono mostrati riutilizzando il componente Property Card, assicurando uniformità con 
+il resto dell'applicazione. Infine, un selettore Grid/Map massimizza la flessibilità d'uso, consentendo 
+di alternare istantaneamente tra il confronto visivo delle schede e l'esplorazione geografica sulla mappa.
+
+\subsection{Pagina Agency Dashboard}
+
+La Agency Dashboard è progettata come centro di controllo operativo, strutturato gerarchicamente per 
+offrire una visione immediata dello stato dell'organizzazione. La sezione superiore, evidenziata da 
+un gradiente blu che trasmette affidabilità, raggruppa i dati anagrafici e l'azione di modifica, 
+fungendo da punto focale primario. A seguire, tre card statistiche sfruttano lo spazio negativo 
+(whitespace) per isolare le metriche chiave, facilitando una lettura rapida.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/AgencyDashboard.png}
+    \caption{Pagina Agency Dashboard}
+    \label{fig:AgencyDashboard}
+\end{figure}
+
+\vspace{0.3cm}
+
+La gestione del personale ("Agency Agents") applica rigorosamente i \textbf{vincoli di sistema}: il 
+manager visualizza un feedback esplicito ("Cannot remove yourself") per prevenire errori critici, 
+mentre per gli altri agenti il pulsante "Remove" utilizza il rosso semantico per segnalare l'azione 
+distruttiva. Infine, la sezione "Agency Properties" garantisce la coerenza interna riutilizzando il 
+componente standard delle card immobiliari, affiancato da una chiara Call to Action per l'inserimento 
+di nuovi annunci.
+
+\subsection{Pagina My Properties}
+
+La sezione My Properties funge da hub gestionale personale per l'agente. Il layout è organizzato per 
+offrire prima una visione d'insieme e poi il controllo granulare. In alto, le card statistiche forniscono 
+un feedback immediato sullo stato del portafoglio (\textbf{Visibility of System Status}), quantificando 
+gli immobili totali e la loro suddivisione per tipologia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/MyProperties.png}
+    \caption{Pagina My Properties}
+    \label{fig:MyProperties}
+\end{figure}
+
+\vspace{0.3cm}
+
+Nella griglia delle inserzioni, è stato introdotto un forte elemento di \textbf{affordance}: la card 
+"Add New Property", distinta da un bordo tratteggiato e un'icona "+", sfrutta la metafora dello "spazio 
+vuoto da riempire" per invitare intuitivamente all'azione di inserimento. Le card degli immobili 
+mantengono la coerenza visiva con le pagine di ricerca, ma integrano controlli di gestione diretta: 
+i pulsanti di Modifica (matita) ed Eliminazione (cestino) sono posti in evidenza accanto alla CTA 
+principale, permettendo una manutenzione rapida delle inserzioni senza dover accedere a sottomenu complessi.
+
+\subsection{Interazione Dinamica Home Page e Mappa}
+
+La Home Page è stata strutturata come hub centrale, progettato per massimizzare l'efficienza della 
+ricerca. La decisione di affiancare alla griglia delle inserzioni una \textbf{Mappa Interattiva} con 
+posizionamento fisso (sticky) risponde all'esigenza di minimizzare il carico di memoria dell'utente: 
+mantenendo il contesto geografico sempre visibile durante lo scorrimento, si evita che l'utente debba 
+ricordare la posizione degli immobili o cambiare pagina continuamente.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Homepage.png}
+    \caption{Home Page con Mappa Interattiva Sincronizzata}
+    \label{fig:HomepageInteractive}
+\end{figure}
+
+\vspace{0.3cm}
+
+Inoltre, per rendere intuitiva la relazione tra i dati, è stato implementato un \textbf{feedback dinamico}: 
+al passaggio del cursore (hover) su una card, il relativo segnaposto sulla mappa si illumina di blu. 
+Questa scelta stabilisce un \textbf{Mapping naturale} tra l'inserzione e la sua ubicazione fisica, 
+permettendo all'utente di correlare istantaneamente le informazioni senza la necessità di click 
+aggiuntivi, rendendo l'interazione più fluida e immediata.

@@ -1,110 +1,422 @@
-%% =====================================================================
-% --- CAPITOLO 3: ARTEFATTI E PROCESSO DI SVILUPPO ---
-% =====================================================================
-\chapter{Artefatti e Processo di Sviluppo}
-\label{cap:artefatti}
-% Riferimento Traccia: "Output: Artefatti Software e documentazione del processo di sviluppo"
-
-Questo capitolo descrive gli artefatti tecnici prodotti e i processi utilizzati per la gestione del codice sorgente, la qualità e il deployment.
-
-\section{Strumenti di Versioning: GitHub}
-
-Per la gestione del codice sorgente e il versionamento del progetto, il team ha scelto di utilizzare GitHub. GitHub è una piattaforma di hosting basata sul sistema di controllo versione distribuito Git. Essa non si limita a fungere da archivio remoto per il codice, ma offre un ecosistema completo per il social coding, integrando strumenti per la gestione delle issue, la revisione del codice (Code Review) e l'automazione dei flussi di lavoro (CI/CD). La scelta di GitHub ha permesso di centralizzare lo sviluppo, garantendo un punto di riferimento unico e sincronizzato per tutti i membri del gruppo.
-
-\subsection{Vantaggi dell'adozione di GitHub}
-L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibili al flusso di lavoro del team, in particolare:
-
+\chapter{Modellazione dei casi d'suo}
+Di seguito sono elencati i principali casi d'uso identificati per il sistema DietiEstates25.
 \begin{itemize}
-    \item \textbf{Collaborazione facilitata:} GitHub ha permesso al team di lavorare in parallelo su diverse 
-    funzionalità senza conflitti bloccanti. Attraverso l'uso dei branch (ramificazioni), ogni sviluppatore 
-    ha potuto isolare il proprio ambiente di sviluppo per lavorare su feature specifiche o bugfix. 
-    L'integrazione delle modifiche nel ramo principale (main/master) è avvenuta tramite Pull Requests (PR), 
-    un meccanismo che ha facilitato la discussione sulle modifiche e la Code Review prima del merge definitivo, 
-    migliorando la qualità complessiva del codice.
-
-    \item \textbf{Tracciamento delle modifiche:} La piattaforma offre una visibilità granulare su ogni singola 
-    modifica apportata al progetto. Grazie alla cronologia dei commit, è possibile identificare esattamente 
-    "chi ha fatto cosa e quando". Questo livello di trasparenza è fondamentale non solo per monitorare 
-    l'avanzamento dei lavori, ma anche per il debugging, permettendo di risalire rapidamente all'origine 
-    di eventuali errori introdotti nel codice.
-
-    \item \textbf{Ritorno a versioni precedenti (Rollback):} Uno dei vantaggi critici di un sistema di 
-    versioning robusto è la possibilità di viaggiare nel tempo all'interno del progetto. In caso di 
-    aggiornamenti che introducono regressioni o errori critici, GitHub permette di ripristinare rapidamente 
-    lo stato del software a una versione precedente, stabile e funzionante. Questo garantisce una 
-    "rete di sicurezza" continua durante tutto il ciclo di sviluppo.
-
-    \item \textbf{Backup e sicurezza:} Essendo un sistema distribuito, il codice risiede sia localmente 
-    sulle macchine degli sviluppatori sia sul repository remoto nel cloud di GitHub. Questa ridondanza 
-    funge da backup automatico: anche in caso di guasto hardware di un computer locale, il lavoro non 
-    viene perso ed è immediatamente recuperabile dal server remoto. Inoltre, GitHub permette di gestire 
-    i permessi di accesso, proteggendo il ramo principale da modifiche non autorizzate o accidentali.
+    \item Gestione Account (Login/Registrazione, incluso Social Login Google)
+    \item Inserimento Inserzioni Immobiliari
+    \item Modifica/Cancellazione Inserzioni
+    \item Ricerca Avanzata Immobili (Filtri e Mappa Interattiva)
+    \item Visualizzazione Dettagli Inserzione (con localizzazione su Mappa)
+    \item Prenotazione Visita (con integrazione API Meteo)
+    \item Gestione Visite (Conferma/Rifiuto)
+    \item Sistema di Notifiche Agenti (Email/Interne)
+    % Aggiungere altri casi d'uso assegnati al gruppo
 \end{itemize}
+% Qui andrebbe inserito il diagramma dei casi d'uso complessivo.
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{use-case-diagram.png}
+%     \caption{Diagramma dei Casi d'Uso di DietiEstates25.}
+%     \label{fig:usecase}
+% \end{figure}
 
-\section{Report di Qualità del Codice (SonarQube)}
-La qualità del software non si misura solo attraverso il corretto funzionamento delle funzionalità, 
-ma anche tramite la struttura interna del codice sorgente. Adottare standard elevati di Clean Code 
-è essenziale per garantire la sostenibilità del progetto: un codice pulito riduce il debito tecnico, 
-accelera l'inserimento di nuovi sviluppatori e semplifica le future fasi di manutenzione ed evoluzione, 
-minimizzando il rischio di regressioni.
+% Use Case Utenti Registrati e Non Registrati
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/UseCaseUtentiRegistrati.drawio.png}
+     \caption{Use Case Utenti Registrati}
+     \label{fig:UC1}
+ \end{figure}
+ 
 
-\subsection{Analisi Statica con SonarQube}
-Per oggettivare la qualità del software prodotto, il team ha integrato nel flusso di sviluppo SonarQube, una piattaforma di analisi statica automatizzata. Questo strumento esegue una scansione continua del codice, evidenziando le aree critiche e fornendo metriche precise per guidare le attività di refactoring.
+  \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/UseCaseNONRegistrato(1).drawio.png}
+     \caption{Use Case Utenti Non Registrati}
+     \label{fig:UC2}
+ \end{figure}
 
-L'analisi si è focalizzata sulle seguenti metriche chiave:
 
-\begin{itemize}
-    \item \textbf{Bugs (Affidabilità):} Identificano errori di logica o di programmazione che porteranno quasi sicuramente a un malfunzionamento o a un crash dell'applicazione in fase di esecuzione. La loro risoluzione ha priorità massima per garantire la stabilità del sistema.
+%----------------------------MOCKUP-----------------------------------
 
-    \item \textbf{Vulnerabilità (Sicurezza):} Segnalano punti deboli nel codice che potrebbero essere sfruttati da attacchi esterni (come Injection o esposizione di dati sensibili). Monitorare questo indice è cruciale per garantire la sicurezza dei dati e l'integrità del sistema.
+\section{Prototipazione visuale via Mock-up}
+Di seguito sono riportati i mock-up delle principali schermate dell'applicazione DietiEstates25, progettati per illustrare l'interfaccia utente e le funzionalità chiave.
 
-    \item \textbf{Code Smells (Manutenibilità):} Non si tratta di errori bloccanti, ma di violazioni delle buone pratiche di programmazione (es. classi troppo grandi, complessità ciclomatica elevata, nomi di variabili poco chiari). Se trascurati, rendono il codice difficile da leggere e modificare, aumentando i costi di manutenzione futuri.
+% MockUp Pagina Login
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/Pagina Login.png}
+     \caption{Mock-up M1: Pagina di Login}
+     \label{fig:M1}
+ \end{figure}
+ 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M2password}
+    \caption{Mock-up M2: Mostra notifica cambio password (admin)}
+    \label{fig:M2}
+\end{figure}
 
-    \item \textbf{Duplicazioni (Ridondanza):} Rilevano blocchi di codice identici ripetuti in più punti (violazione del principio DRY - Don't Repeat Yourself). Le duplicazioni sono pericolose perché richiedono che ogni modifica venga replicata manualmente in tutti i punti, aumentando il rischio di errore umano.
-\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M3password}
+    \caption{Mock-up M3: Pagina cambia password (admin)}
+    \label{fig:M3}
+\end{figure}
 
-\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M4password}
+    \caption{Mock-up M4: Modifica confermata (admin)}
+    \label{fig:M4}
+\end{figure}
 
-\section{Containerizzazione (Dockerfile)}
-% Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
-% Riferimenti Slide: 24 - Virtualizzazione e Cloud.pdf
-Come richiesto, il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. Di seguito è riportato il \texttt{Dockerfile} utilizzato per il backend Express:
 
-\begin{lstlisting}[language=bash, caption={Dockerfile per il backend Node.js/Express}]
-# Stage 1: Build
-FROM node:18-alpine AS builder
-WORKDIR /usr/src/app
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M5passwordError}
+    \caption{Mock-up M5: Errore nuova password inferiore a 6 caratteri (admin)}
+    \label{fig:M5}
+\end{figure}
 
-# Copia package.json e installa le dipendenze
-COPY package*.json ./
-RUN npm install
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M6passwordError}
+    \caption{Mock-up M6: Errore nuova password non corrisponde a conferma nuova password (admin)}
+    \label{fig:M6}
+\end{figure}
 
-# Copia il resto del codice sorgente
-COPY . .
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M7Home}
+    \caption{Mock-up M7: Home Page (Agent-Manager-Support-Admin)}
+    \label{fig:M7}
+\end{figure}
 
-# Compila il codice TypeScript
-RUN npm run build
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M8Sell}
+    \caption{Mock-up M8: Aggiungi nuova proprietà (Agent-Manager-Support-Admin)}
+    \label{fig:M8}
+\end{figure}
 
-# Stage 2: Produzione
-FROM node:18-alpine
-WORKDIR /usr/src/app
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M9Success}
+    \caption{Mock-up M9: Successo aggiungi nuova proprietà (Agent-Manager-Support-Admin)}
+    \label{fig:M9}
+\end{figure}
 
-# Copia solo i file necessari dalla build precedente
-COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/dist ./dist
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M21DatiImmobileError}
+    \caption{Mock-up M21: Errore dati immobile richiesti (Agent-Manager-Support-Admin)}
+    \label{fig:M21}
+\end{figure}
 
-# Installa solo le dipendenze di produzione
-RUN npm ci --only=production
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M10HomePageCustomer}
+    \caption{Mock-up M10: Home Page (Customer)}
+    \label{fig:M10}
+\end{figure}
 
-# Esponi la porta
-EXPOSE 3000
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M11Prenotazione}
+    \caption{Mock-up M11: Prenotazione visita (Customer)}
+    \label{fig:M11}
+\end{figure}
 
-# Comando di avvio
-CMD [ "node", "dist/index.js" ]
-\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M12ConfermaPrenotazione}
+    \caption{Mock-up M12: Successo prenotazione visita (Customer)}
+    \label{fig:M12}
+\end{figure}
 
-\section{File di Build Automatica}
-% Riferimento Traccia: "File di build automatica"
-La build automatica è gestita tramite gli script NPM definiti in \texttt{package.json} e orchestrati dal \texttt{Dockerfile}. Lo script \texttt{npm run build} (che esegue \texttt{tsc}) compila il codice TypeScript in JavaScript.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M19ErrorePrenotazione}
+    \caption{Mock-up M19: Errore prenotazione visita (Customer)}
+    \label{fig:M19}
+\end{figure}
 
-Il deployment è automatizzato tramite \texttt{docker-compose.yml}, che orchestra l'avvio del container dell'applicazione e del database.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M13MenuUtente}
+    \caption{Mock-up M13: Menù per gli utenti in base al ruolo}
+    \label{fig:M13}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M14PaginaAgenti}
+    \caption{Mock-up M14: Pagina Agenti Non Assegnati (Admin-Support)}
+    \label{fig:M14}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M15SelezioneAgenzia}
+    \caption{Mock-up M15: Selezione Agenzia (Admin-Support)}
+    \label{fig:M15}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M16Assegnazione}
+    \caption{Mock-up M16: Assegnazione Agenti Non Assegnati (Admin-Support)}
+    \label{fig:M16}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M17Banner}
+    \caption{Mock-up M17: Conferma Assegnazione Agenti Non Assegnati (Admin-Support)}
+    \label{fig:M17}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M18SuccessoAssegnazione}
+    \caption{Mock-up M18: Successo Assegnazione Agenti Non Assegnati (Admin-Support)}
+    \label{fig:M18}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/M20UnassignedAgentsEmpty}
+    \caption{Mock-up M20: Pagina Agenti Non Assegnati Vuota (Admin-Support)}
+    \label{fig:M20}
+\end{figure}
+%----------------------------USE CASES-----------------------------------
+
+\section{Formalizzazione dei Casi d'Uso Significativi}
+
+\subsection{Caso d'Uso: Cambio Password (Admin) }
+
+% PRIMA PARTE DELLA TABELLA
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Cambio Password (Admin) - Parte 1}
+    \label{tab:uc_login_1}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#1: Cambio Password (Admin)}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'Admin vuole cambiare la propria password.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'Admin è autenticato nel sistema e non ha cambiato la password di default.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{L'Admin ha cambiato con successo la propria password.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'Admin non riesce a cambiare la password (dati errati).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Utente (Admin)} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente accede alla pagina di login.} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{5}{*}{} 
+          & 1 &  & Mostra M2 "Notifica Pop\_up Cambio Password" \\ \cline{2-4}
+          & 2 & Utente Clicca la Notifica Pop\_up & \\ \cline{2-4}
+          & 3 &  &  Mostra M3 "Schermata Cambio Password" \\ \cline{2-4}
+          & 4 & Inserisce nuova password &  \\ \cline{2-4}
+          & 5 & Clicca "Change Password" &  \\ \hline
+          & 6 & & Mostra M4 "Conferma Cambio Password" \\ \hline
+          & 7 & Clicca "Back to Home" &  \\ \hline
+    \end{tabularx}
+\end{table}
+
+% SECONDA PARTE DELLA TABELLA (Extensions)
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Cambio Password (Admin) - Parte 2 (Extensions)}
+    \label{tab:uc_login_2}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: La nuova password è inferiore a 6 caratteri  
+          & 4a & & Mostra M5 \\ \cline{2-4}
+          & 5a & Utente inserisce nuova password superiore a 6 caratteri e clicca "Change Password"&  \\ \cline{2-4}
+          & 6a &  &  Termina UC. \\  \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. B}: Nuova password e conferma nuova password non corrispondono
+          & 4b & & Mostra M6 \\ \cline{2-4}
+          & 5b & Utente inserisce nuova password che corrisponde a conferma nuova password e clicca "Change Password" &  \\ \cline{2-4}
+          & 6b &  &  Termina UC. \\  \hline
+    \end{tabularx}
+\end{table}
+
+% MockUp Cambio Password
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-ChangeAdminPassword(1).png}
+     \caption{MockUp Cambio Password Admin.}
+     \label{fig:mockup_change_admin_password}
+ \end{figure}
+
+
+
+\subsection{Caso d'Uso: Prenotazione Visita}
+
+% --- CASO D'USO: PRENOTA VISITA ---
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.4} % Spazia un po' le righe per leggibilità
+    \caption{Caso d'uso: Prenota Visita}
+    \label{tab:uc_prenota_visita}
+    
+    % La tabella ha 4 colonne: 
+    % 1. Etichetta (H)
+    % 2. Step Num (S)
+    % 3. Azione Cliente (Y)
+    % 4. Azione Sistema (Y)
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        
+        % INTESTAZIONE
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#2: Prenota Visita}}} \\ \hline
+        
+        % CAMPI STANDARD (Uniamo le ultime 3 colonne con multicolumn)
+        Goal in Context & \multicolumn{3}{L{11cm}|}{Il cliente vuole prenotare una visita di un immobile.} \\ \hline
+        
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente deve aver effettuato l'accesso; Il cliente deve aver cercato un immobile; Il cliente è sulla scheda immobile.} \\ \hline
+        
+        Success End Condition & \multicolumn{3}{L{11cm}|}{Il sistema traccia la visita, la registra negli appuntamenti e notifica l'agente.} \\ \hline
+        
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{La prenotazione non viene effettuata; Il cliente ha effettuato la prenotazione della visita dell'immobile ed è in attesa di conferma o rifiuto.} \\ \hline
+        
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Cliente} \\ \hline
+        
+        Trigger & \multicolumn{3}{L{11cm}|}{Il cliente clicca "Prenota visita" nella schermata "Visualizza Immobile".} \\ \hline
+        
+        % --- SCENARIO PRINCIPALE ---
+        % Qui usiamo le 4 colonne separate
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Cliente}} & \textbf{\textit{System}} \\ \hline
+        
+        % Uso \multirow vuoto per lasciare la colonna sinistra pulita mentre scendiamo
+        \multirow{12}{*}{} 
+          & 1 & Clicca ``Prenota visita'' & \\ \cline{2-4}
+          & 2 & & Mostra M7 ``Prenota Visita'' con calendario \\ \cline{2-4}
+          & 3 & Seleziona il giorno & \\ \cline{2-4}
+          & 4 & Seleziona la fascia oraria & \\ \cline{2-4}
+          & 5 & Clicca ``Prosegui'' & \\ \cline{2-4}
+          & 6 & & Mostra M8 ``Messaggio di conferma'' \\ \cline{2-4}
+          & 7 & Clicca ``Ok'' & \\ \cline{2-4}
+          & 8 & & Mostra M4 ``Visualizza Immobile'' e notifica agente. Termina UC. \\ \hline
+          
+        % --- EXTENSIONS ---
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Cliente}} & \textbf{\textit{System}} \\ \hline
+        
+        \textbf{Ext. A}: Prenotazione esistenza in stato di pending in M7 
+          & 4a & & Mostra M19\\ \cline{2-4}
+          & 5a & Cliente clicca "OK" in M19 &\\ \cline{2-4}
+          & 6a & & Termina UC. \\ \hline
+
+    \end{tabularx}
+\end{table}
+
+
+% MockUp Prenotazione
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-prenotazione.png}
+     \caption{MockUp Prenotazione Visita.}
+     \label{fig:mockup_prenotazione}
+ \end{figure}
+
+
+
+\subsection{Caso d'Uso: Inserimento Immobile}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \caption{Caso d'uso: Inserimento Immobile}
+    \label{tab:uc_inserimento}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#3: Inserimento Immobile}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'agente vuole pubblicare una nuova inserzione immobiliare.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'agente è autenticato nel sistema.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{La nuova inserzione è salvata e visibile agli utenti.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'inserzione non viene creata (dati mancanti).} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Agente Immobiliare} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'agente clicca su "Sell".} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{6}{*}{} 
+          & 1 & Clicca "Sell in M7" & \\ \cline{2-4}
+          & 2 & & Mostra il form di inserimento in M8 \\ \cline{2-4}
+          & 3 & Compila dettagli e carica foto & \\ \cline{2-4}
+          & 4 & Clicca "List Property for Sale" & \\ \cline{2-4}
+          & 5 & & Mostra M9 "Property Listed Successfully". Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Agente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Dati richiesti mancanti
+          & 4a & & Rileva campi obbligatori mancanti, bottone "List Property for Sale" non cliccabile \\ \cline{2-4}
+          & 5a & L'utente inserisce i dati richiesti mancanti e clicca "List Property for Sale"&  \\ \cline{2-4}
+          & 6a & & Mostra M9 "Property Listed Successfully". Termina UC. \\ \hline
+
+    \end{tabularx}
+\end{table}
+
+
+% MockUp Inserimento
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-AggiungiProprietà.png}
+     \caption{MockUp Inserimento Immobile.}
+     \label{fig:mockup_inserimento}
+ \end{figure}
+
+\subsection{Caso d'Uso: Aggiunta Agenti Immobiliari Non assegnati}
+\begin{table}[H]
+    \caption{Caso d'uso: Aggiunta Agenti Immobiliari Non assegnati}
+    \label{tab:uc_aggiunta_agenti}
+    \begin{tabularx}{\textwidth}{|H|S|Y|Y|}
+        \hline
+        \rowcolor{ucBlue}
+        \multicolumn{4}{|l|}{\textcolor{white}{\textbf{USE CASE \#4: Aggiunta Agenti Immobiliari Non assegnati}}} \\ \hline
+        Goal in Context & \multicolumn{3}{L{11cm}|}{L'utente con il ruolo di support o admin vuole assegnare un'agenzia ad un agente immobiliare privo di agenzia.} \\ \hline
+        Preconditions & \multicolumn{3}{L{11cm}|}{L'utente è autenticato nel sistema e possiede il ruolo di \textbf{Admin} o \textbf{Support}.} \\ \hline
+        Success End Condition & \multicolumn{3}{L{11cm}|}{L'agenzia viene assegnata correttamente all'agente immobiliare precedentemente privo.} \\ \hline
+        Failed End Condition & \multicolumn{3}{L{11cm}|}{L'operazione non viene, non esistono agenti privi di agenzia.} \\ \hline
+        Primary Actor & \multicolumn{3}{L{11cm}|}{Admin, Support} \\ \hline
+        Trigger & \multicolumn{3}{L{11cm}|}{L'utente clicca su "Unassigned Agents".} \\ \hline
+        \rowcolor{ucLight}
+        Main Scenario & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \multirow{4}{*}{} 
+          & 1 & Clicca il proprio nome utente presente sulla navbar & \\ \cline{2-4}
+          & 2 & & Mostra M13 \\ \cline{2-4}
+          & 3 & Clicca la voce "Unassigned Agents" & \\ \cline{2-4}
+          & 4 & & Mostra M14 con la lista degli agenti non assegnati. \\ \cline{2-4}
+          & 5 & Clicca sulla voce "Assign to Agency" all'utente preferito. & \\ \hline
+          & 6 & & Mostra M15 con la lista delle agenzie presenti nel sistema. \\ \hline
+          & 7 & Seleziona l'agenzia e clicca il bottone "Assign" in M16.&  \\ \hline
+          & 8 & & Mostra M17 per confermare o annullare l'assegnazione. \\ \hline
+          & 9 & Clicca "Assign" in M17&  \\ \hline
+          
+          & 10 & & Mostra M18 "Agency Assigned Successfully". Termina UC. \\ \hline
+        \rowcolor{ucLight}
+        Extensions & \textbf{Step} & \textbf{\textit{Utente}} & \textbf{\textit{System}} \\ \hline
+        \textbf{Ext. A}: Tutti gli agenti sono assegnati ad un'agenzia
+          & 4a & & Mostra M20, tutti gli agenti non sono privi di agenzia. Termina UC. \\ \hline
+    \end{tabularx}
+\end{table}
+
+
+% MockUp Aggiunta Agenti Immobiliari Non assegnati
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/mockup-UnassignedAgents.png}
+     \caption{MockUp Aggiunta Agenti Immobiliari Non assegnati.}
+     \label{fig:mockup_aggiunta_agenti}
+ \end{figure}
+
+
+\newpage
+

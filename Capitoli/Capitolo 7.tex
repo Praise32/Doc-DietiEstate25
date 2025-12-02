@@ -1,0 +1,110 @@
+%% =====================================================================
+% --- CAPITOLO 3: ARTEFATTI E PROCESSO DI SVILUPPO ---
+% =====================================================================
+\chapter{Artefatti e Processo di Sviluppo}
+\label{cap:artefatti}
+% Riferimento Traccia: "Output: Artefatti Software e documentazione del processo di sviluppo"
+
+Questo capitolo descrive gli artefatti tecnici prodotti e i processi utilizzati per la gestione del codice sorgente, la qualità e il deployment.
+
+\section{Strumenti di Versioning: GitHub}
+
+Per la gestione del codice sorgente e il versionamento del progetto, il team ha scelto di utilizzare GitHub. GitHub è una piattaforma di hosting basata sul sistema di controllo versione distribuito Git. Essa non si limita a fungere da archivio remoto per il codice, ma offre un ecosistema completo per il social coding, integrando strumenti per la gestione delle issue, la revisione del codice (Code Review) e l'automazione dei flussi di lavoro (CI/CD). La scelta di GitHub ha permesso di centralizzare lo sviluppo, garantendo un punto di riferimento unico e sincronizzato per tutti i membri del gruppo.
+
+\subsection{Vantaggi dell'adozione di GitHub}
+L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibili al flusso di lavoro del team, in particolare:
+
+\begin{itemize}
+    \item \textbf{Collaborazione facilitata:} GitHub ha permesso al team di lavorare in parallelo su diverse 
+    funzionalità senza conflitti bloccanti. Attraverso l'uso dei branch (ramificazioni), ogni sviluppatore 
+    ha potuto isolare il proprio ambiente di sviluppo per lavorare su feature specifiche o bugfix. 
+    L'integrazione delle modifiche nel ramo principale (main/master) è avvenuta tramite Pull Requests (PR), 
+    un meccanismo che ha facilitato la discussione sulle modifiche e la Code Review prima del merge definitivo, 
+    migliorando la qualità complessiva del codice.
+
+    \item \textbf{Tracciamento delle modifiche:} La piattaforma offre una visibilità granulare su ogni singola 
+    modifica apportata al progetto. Grazie alla cronologia dei commit, è possibile identificare esattamente 
+    "chi ha fatto cosa e quando". Questo livello di trasparenza è fondamentale non solo per monitorare 
+    l'avanzamento dei lavori, ma anche per il debugging, permettendo di risalire rapidamente all'origine 
+    di eventuali errori introdotti nel codice.
+
+    \item \textbf{Ritorno a versioni precedenti (Rollback):} Uno dei vantaggi critici di un sistema di 
+    versioning robusto è la possibilità di viaggiare nel tempo all'interno del progetto. In caso di 
+    aggiornamenti che introducono regressioni o errori critici, GitHub permette di ripristinare rapidamente 
+    lo stato del software a una versione precedente, stabile e funzionante. Questo garantisce una 
+    "rete di sicurezza" continua durante tutto il ciclo di sviluppo.
+
+    \item \textbf{Backup e sicurezza:} Essendo un sistema distribuito, il codice risiede sia localmente 
+    sulle macchine degli sviluppatori sia sul repository remoto nel cloud di GitHub. Questa ridondanza 
+    funge da backup automatico: anche in caso di guasto hardware di un computer locale, il lavoro non 
+    viene perso ed è immediatamente recuperabile dal server remoto. Inoltre, GitHub permette di gestire 
+    i permessi di accesso, proteggendo il ramo principale da modifiche non autorizzate o accidentali.
+\end{itemize}
+
+\section{Report di Qualità del Codice (SonarQube)}
+La qualità del software non si misura solo attraverso il corretto funzionamento delle funzionalità, 
+ma anche tramite la struttura interna del codice sorgente. Adottare standard elevati di Clean Code 
+è essenziale per garantire la sostenibilità del progetto: un codice pulito riduce il debito tecnico, 
+accelera l'inserimento di nuovi sviluppatori e semplifica le future fasi di manutenzione ed evoluzione, 
+minimizzando il rischio di regressioni.
+
+\subsection{Analisi Statica con SonarQube}
+Per oggettivare la qualità del software prodotto, il team ha integrato nel flusso di sviluppo SonarQube, una piattaforma di analisi statica automatizzata. Questo strumento esegue una scansione continua del codice, evidenziando le aree critiche e fornendo metriche precise per guidare le attività di refactoring.
+
+L'analisi si è focalizzata sulle seguenti metriche chiave:
+
+\begin{itemize}
+    \item \textbf{Bugs (Affidabilità):} Identificano errori di logica o di programmazione che porteranno quasi sicuramente a un malfunzionamento o a un crash dell'applicazione in fase di esecuzione. La loro risoluzione ha priorità massima per garantire la stabilità del sistema.
+
+    \item \textbf{Vulnerabilità (Sicurezza):} Segnalano punti deboli nel codice che potrebbero essere sfruttati da attacchi esterni (come Injection o esposizione di dati sensibili). Monitorare questo indice è cruciale per garantire la sicurezza dei dati e l'integrità del sistema.
+
+    \item \textbf{Code Smells (Manutenibilità):} Non si tratta di errori bloccanti, ma di violazioni delle buone pratiche di programmazione (es. classi troppo grandi, complessità ciclomatica elevata, nomi di variabili poco chiari). Se trascurati, rendono il codice difficile da leggere e modificare, aumentando i costi di manutenzione futuri.
+
+    \item \textbf{Duplicazioni (Ridondanza):} Rilevano blocchi di codice identici ripetuti in più punti (violazione del principio DRY - Don't Repeat Yourself). Le duplicazioni sono pericolose perché richiedono che ogni modifica venga replicata manualmente in tutti i punti, aumentando il rischio di errore umano.
+\end{itemize}
+
+\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
+
+\section{Containerizzazione (Dockerfile)}
+% Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
+% Riferimenti Slide: 24 - Virtualizzazione e Cloud.pdf
+Come richiesto, il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. Di seguito è riportato il \texttt{Dockerfile} utilizzato per il backend Express:
+
+\begin{lstlisting}[language=bash, caption={Dockerfile per il backend Node.js/Express}]
+# Stage 1: Build
+FROM node:18-alpine AS builder
+WORKDIR /usr/src/app
+
+# Copia package.json e installa le dipendenze
+COPY package*.json ./
+RUN npm install
+
+# Copia il resto del codice sorgente
+COPY . .
+
+# Compila il codice TypeScript
+RUN npm run build
+
+# Stage 2: Produzione
+FROM node:18-alpine
+WORKDIR /usr/src/app
+
+# Copia solo i file necessari dalla build precedente
+COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Installa solo le dipendenze di produzione
+RUN npm ci --only=production
+
+# Esponi la porta
+EXPOSE 3000
+
+# Comando di avvio
+CMD [ "node", "dist/index.js" ]
+\end{lstlisting}
+
+\section{File di Build Automatica}
+% Riferimento Traccia: "File di build automatica"
+La build automatica è gestita tramite gli script NPM definiti in \texttt{package.json} e orchestrati dal \texttt{Dockerfile}. Lo script \texttt{npm run build} (che esegue \texttt{tsc}) compila il codice TypeScript in JavaScript.
+
+Il deployment è automatizzato tramite \texttt{docker-compose.yml}, che orchestra l'avvio del container dell'applicazione e del database.
