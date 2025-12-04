@@ -97,11 +97,40 @@ principali del sistema.
     \label{fig:Login}
 \end{figure}
 
-Per le interfacce di autenticazione e registrazione, è stato adottato un design che applica il 
-\textbf{Principio della Regione Comune della Gestalt}. Questa scelta architettonica non è puramente 
-estetica, ma funzionale all'usabilità: delimitando visivamente l'area di input tramite un contenitore 
-(card), si organizza l'informazione e si guida l'attenzione dell'utente sugli elementi attivi, 
-riducendo le distrazioni esterne.
+Per le interfacce di autenticazione e registrazione, l'approccio progettuale ha integrato principi di 
+psicologia percettiva e motion design per ottimizzare l'accoglienza dell'utente.
+
+\vspace{0.3cm}
+
+In prima istanza, è stato introdotto un effetto di dissolvenza (fade-in) al cambio delle schermate. 
+Questa transizione morbida non assolve a una funzione puramente estetica, ma gioca un ruolo chiave 
+nell'User Engagement: evita cambiamenti bruschi a video, riducendo il carico cognitivo iniziale e 
+guidando l'occhio dell'utente in modo naturale verso il centro dell'azione.
+
+\vspace{0.3cm}
+
+A livello strutturale, il design applica il \textbf{Principio della Regione Comune della Gestalt} 
+attraverso un layout a "scheda" (Split-Card Layout). Osservando le interfacce, si nota una netta 
+distinzione visiva:
+
+\begin{itemize}
+    \item \textbf{L'area funzionale} (su sfondo chiaro) raggruppa i campi di input, isolandoli dalle distrazioni 
+    per facilitare la compilazione.
+
+    \item \textbf{L'area emozionale/brand} (su sfondo scuro) accoglie l'utente ("Join Our Community", "Welcome Back"), 
+    rafforzando l'identità visiva senza interferire con l'operatività.
+\end{itemize}
+
+\vspace{0.3cm}
+
+Questa organizzazione spaziale guida l'attenzione sugli elementi attivi, migliorando la leggibilità 
+e l'affordance dei form.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Register.png}
+    \caption{Pagina di accesso: Registrazione}
+    \label{fig:Register}
+\end{figure}
 
 \vspace{0.3cm}
 
@@ -109,8 +138,6 @@ A differenza di sistemi che frammentano l'accesso su portali diversi, si è scel
 punto di ingresso unico per tutte le tipologie di utente. Questa strategia massimizza la 
 \textbf{coerenza interna del sistema}, semplificando il modello mentale necessario per l'accesso. 
 La differenziazione dei privilegi avviene tramite una logica di backend trasparente all'utente:
-
-\vspace{0.3cm}
 
 \begin{itemize}
     \item \textbf{Utenti Customer (Registrazione Autonoma):} La registrazione pubblica tramite questa 
@@ -122,15 +149,9 @@ La differenziazione dei privilegi avviene tramite una logica di backend traspare
     tramite registrazione pubblica. Il flusso di onboarding avviene esclusivamente tramite un invito via 
     email generato dagli amministratori. L'utente riceve un link univoco che lo indirizza a una procedura 
     pre-configurata, associandolo automaticamente al ruolo specifico senza necessità di configurazioni 
-    manuali o interfacce separate.
+    manuali.
 \end{itemize}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/Register.png}
-    \caption{Pagina di accesso: Registrazione}
-    \label{fig:Register}
-\end{figure}
 
 \subsection{Pagina Listing Property}
 
