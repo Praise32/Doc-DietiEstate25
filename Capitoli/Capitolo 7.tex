@@ -48,6 +48,14 @@ ma anche tramite la struttura interna del codice sorgente. Adottare standard ele
 accelera l'inserimento di nuovi sviluppatori e semplifica le future fasi di manutenzione ed evoluzione, 
 minimizzando il rischio di regressioni.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Sonar1.png}
+    \caption{Report di qualità del codice con SonarQube }
+    \label{fig:Sonar1}
+\end{figure}
+
+
 \subsection{Analisi Statica con SonarQube}
 Per oggettivare la qualità del software prodotto, il team ha integrato nel flusso di sviluppo SonarQube, una piattaforma di analisi statica automatizzata. Questo strumento esegue una scansione continua del codice, evidenziando le aree critiche e fornendo metriche precise per guidare le attività di refactoring.
 
@@ -63,7 +71,12 @@ L'analisi si è focalizzata sulle seguenti metriche chiave:
     \item \textbf{Duplicazioni (Ridondanza):} Rilevano blocchi di codice identici ripetuti in più punti (violazione del principio DRY - Don't Repeat Yourself). Le duplicazioni sono pericolose perché richiedono che ogni modifica venga replicata manualmente in tutti i punti, aumentando il rischio di errore umano.
 \end{itemize}
 
-\textit{[Placeholder per screenshot SonarQube (Quality Gate, Bugs, Vulnerabilities, Code Smells).]}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Sonar2.png}
+    \caption{Dashboard di SonarQube per il monitoraggio della qualità del codice}
+    \label{fig:Sonar2}
+\end{figure}
 
 \section{Containerizzazione (Dockerfile)}
 % Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
