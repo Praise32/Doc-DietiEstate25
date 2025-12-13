@@ -99,10 +99,92 @@ Lo schema dati è stato definito utilizzando Drizzle ORM (vedi \texttt{src/db/sc
 
 \section{Diagrammi di Sequenza di Design}
 % Riferimento Traccia: "Diagrammi di sequenza di design per i casi d'uso..."
-% Inserisci qui i diagrammi di sequenza per i 4 casi d'uso scelti.
-\textit{[Placeholder per i Diagrammi di Sequenza UML (es. Prenotazione Visita, Ricerca Immobile, etc.).]}
 
+I diagrammi di sequenza rappresentano uno degli strumenti più efficaci del linguaggio \textbf{UML 
+(Unified Modeling Language)} per modellare la dimensione dinamica di un sistema software. A differenza 
+dei diagrammi strutturali, essi pongono l'accento sull'\textbf{ordine temporale degli eventi}, 
+illustrando come le diverse entità interagiscono tra loro per portare a termine un compito specifico.
 
+\vspace{0.3cm}
+
+Questi diagrammi sono cruciali per tradurre i \textbf{requisiti funzionali in logica tecnica}: permettono 
+di visualizzare il flusso di messaggi che attraversa i vari livelli dell'architettura (dall'interfaccia 
+utente fino al database), evidenziando le \textbf{responsabilità di ogni componente}. Grazie alla loro 
+immediatezza visiva, costituiscono un \textbf{ponte comunicativo indispensabile} tra team di sviluppo 
+e stakeholder, garantendo che la logica operativa sia chiara, condivisa e priva di ambiguità prima 
+della fase di implementazione.
+
+\subsection{Registrazione Utente}
+
+Il diagramma descrive il flusso di registrazione di un nuovo utente sulla piattaforma. L'attore compila 
+il modulo e, dopo una prima \textbf{validazione client-side} sulla coerenza delle password, il componente 
+frontend invia una richiesta POST al server. Il backend riceve i dati ed esegue controlli di integrità 
+tramite \textbf{schema Zod}, verificando successivamente l'unicità dell'email nel database PostgreSQL 
+per evitare duplicati. Se i controlli hanno esito positivo, la password viene \textbf{criptata} e 
+l'utente viene salvato; il sistema genera quindi un \textbf{token JWT} per l'autenticazione automatica 
+e reindirizza l'utente alla Home Page. In caso di errore, come un'email già esistente, il server 
+restituisce un codice di conflitto (409) che viene gestito dall'interfaccia mostrando un avviso specifico.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDRegistrazione.png}
+    \caption{Diagramma di Sequenza: Registrazione Utente}
+    \label{fig:SD_Registrazione}
+\end{figure}
+
+\subsection{Creazione Inserzione (Immobile)}
+
+Questo diagramma illustra il processo a due fasi per la pubblicazione di un nuovo annuncio immobiliare. 
+Nella prima fase, l'Agente invia i dettagli dell'immobile; il backend, previa verifica del \textbf{token JWT} 
+e validazione dei dati, interpella il servizio esterno \textbf{Nominatim (OpenStreetMap)} per geolocalizzare 
+l'indirizzo prima di salvare il record nel database. Successivamente, avviene la fase di \textbf{upload 
+delle immagini}: il frontend invia i file al server che, verificata la proprietà dell'annuncio appena 
+creato, li carica su uno storage esterno (S3 Bucket) e ne memorizza i riferimenti nel database. Il 
+flusso gestisce in modo granulare eventuali errori di validazione o di upload, garantendo che l'annuncio 
+venga pubblicato solo se completo di tutti i dati essenziali.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDCreaInserzioni.png}
+    \caption{Diagramma di Sequenza: Creazione Inserzione}
+    \label{fig:SD_CreaInserzione}
+\end{figure}
+
+\subsection{Ricerca Immobile}
+
+Il diagramma di sequenza mostra le dinamiche di ricerca e filtraggio degli immobili da parte dell'utente. 
+All'inizializzazione del componente, il sistema esegue una \textbf{query automatica} per mostrare gli 
+annunci più recenti o in evidenza. Quando l'utente applica filtri specifici (come località, tipologia 
+o fascia di prezzo), il Client invia una richiesta HTTP GET con i parametri corrispondenti. Il backend 
+traduce questi parametri in una \textbf{query SQL ottimizzata} per estrarre dal database solo le 
+corrispondenze pertinenti. Viene inoltre evidenziato il meccanismo di \textbf{paginazione ("Load More")}, 
+che permette all'utente di caricare risultati successivi in modo incrementale, migliorando le prestazioni 
+e l'usabilità dell'interfaccia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDRicercaImmobile.png}
+    \caption{Diagramma di Sequenza: Ricerca Immobile}
+    \label{fig:SD_RicercaImmobile}
+\end{figure}
+
+\subsection{Gestione Appuntamenti}
+
+Il diagramma dettaglia l'intero \textbf{ciclo di vita di un appuntamento}, coinvolgendo due attori 
+distinti: il Cliente e l'Agente. Il flusso inizia con il Cliente che invia una richiesta di visita 
+per una data specifica; il sistema, dopo la validazione, registra l'appuntamento nel database con 
+stato \textbf{"pending" (in attesa)}. Parallelamente, l'Agente accede alla propria dashboard visualizzando 
+gli appuntamenti assegnati tramite una richiesta autenticata che filtra i dati in base al suo ruolo. 
+L'interazione si conclude con l'azione dell'Agente di \textbf{accettare o rifiutare} la visita: il 
+backend verifica i permessi di modifica, aggiorna lo stato dell'appuntamento nel database e restituisce 
+il feedback all'interfaccia grafica, completando il ciclo di gestione.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDGestioneAppuntamenti.png}
+    \caption{Diagramma di Sequenza: Gestione Appuntamenti}
+    \label{fig:SD_GestioneAppuntamenti}
+\end{figure}
 
 % =====================================================================
 

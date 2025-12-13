@@ -20,6 +20,7 @@ Le principali regole di qualità applicate includono:
 \end{itemize}
 L'analisi viene eseguita localmente tramite lo script \texttt{npm run lint} e validata tramite \texttt{npm run type-check} per assicurare la coerenza dei tipi TypeScript prima di ogni commit.
 
+
 \section{Verifica Dinamica (Unit Testing)}
 % Riferimento Slide: "Unit Testing in Isolation" e "Testing BB e WB"
 La strategia di verifica dinamica si è concentrata sul \textbf{Unit Testing} dei componenti critici del backend. È stato adottato un approccio \textbf{Black-Box Testing}, basato sulla partizione in \textbf{Classi di Equivalenza} (Equivalence Class Partitioning) per definire gli scenari di test.
@@ -36,7 +37,7 @@ Di seguito sono riportati i dettagli di quattro metodi significativi sottoposti 
     
     \item[Strategia di Testing] Approccio Black-Box con criterio R-WECT (Robust Weak Equivalence Class Testing). Il test verifica che la query al database venga costruita correttamente in base al ruolo, senza eseguire realmente la cancellazione (Isolamento tramite Mock di Drizzle).
     
-    \item[Classi di Equivalenza Individuate]
+    \item[Classi di Equivalenza Individuate] ~\\
     \begin{itemize}
         \item \textbf{CE1 (Valida - Admin):} Input: \texttt{id=1, userRole="admin"}. $\rightarrow$ Atteso: Query eseguita senza filtri aggiuntivi.
         \item \textbf{CE2 (Valida - Customer):} Input: \texttt{id=1, userId=123, userRole="customer"}. $\rightarrow$ Atteso: Query con clausola \texttt{WHERE userId = 123}.
@@ -44,19 +45,15 @@ Di seguito sono riportati i dettagli di quattro metodi significativi sottoposti 
     \end{itemize}
 \end{description}
 
-\begin{lstlisting}[language=Java, caption={Unit Test per deleteAppointment con Mocking}]
-it("dovrebbe applicare filtri aggiuntivi se l'utente e' customer", async () => {
-  // Arrange: Mock della catena delete -> where -> returning
-  const { whereMock } = mockDeleteChain([{ id: 1 }]);
 
-  // Act
-  await deleteAppointment(1, 123, "customer");
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/test1.png}
+    \caption{Esempio di output dell'analisi statica con ESLint}
+    \label{fig:test1}
+\end{figure}
 
-  // Assert: Verifica isolamento e logica
-  expect(db.delete).toHaveBeenCalled();
-  expect(whereMock).toHaveBeenCalled();
-});
-\end{lstlisting}
+
 
 % --- METODO 2 ---
 \subsection{Test del metodo \texttt{getPostsNearby}}
@@ -66,28 +63,19 @@ it("dovrebbe applicare filtri aggiuntivi se l'utente e' customer", async () => {
     
     \item[Strategia di Testing] Verifica della corretta costruzione della query spaziale. La funzione \texttt{db.select} e i metodi concatenati (\texttt{from}, \texttt{where}) sono stati "stubbati" per restituire dati fittizi.
     
-    \item[Classi di Equivalenza Individuate]
+    \item[Classi di Equivalenza Individuate] ~\\
     \begin{itemize}
         \item \textbf{CE1 (Valida):} Input: \texttt{lat=40.85, lon=14.26, radius=5000}. $\rightarrow$ Atteso: Lista immobili ordinati per distanza.
         \item \textbf{CE2 (Limite):} Input: \texttt{radius=0}. $\rightarrow$ Atteso: Lista vuota o query valida senza risultati.
     \end{itemize}
 \end{description}
 
-\begin{lstlisting}[language=Java, caption={Unit Test per getPostsNearby}]
-it("dovrebbe eseguire la query spaziale con i parametri corretti", async () => {
-  // Arrange: Mock della catena fluente di Drizzle
-  const whereMock = jest.fn().mockReturnValue({ orderBy: orderByMock });
-  const fromMock = jest.fn().mockReturnValue({ where: whereMock });
-  (db.select as jest.Mock).mockReturnValue({ from: fromMock });
-
-  // Act
-  const result = await getPostsNearby(40.85, 14.26, 5000, 1, 10);
-
-  // Assert
-  expect(fromMock).toHaveBeenCalled(); 
-  expect(result).toEqual(mockPosts);
-});
-\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/test2.png}
+    \caption{Unit Test per getPostsNearby}
+    \label{fig:test2}
+\end{figure}
 
 % --- METODO 3 ---
 \subsection{Test del metodo \texttt{getAllAppointmentsForCalendar}}
@@ -97,7 +85,7 @@ it("dovrebbe eseguire la query spaziale con i parametri corretti", async () => {
     
     \item[Strategia di Testing] Test strutturale della logica condizionale di costruzione della query.
     
-    \item[Classi di Equivalenza Individuate]
+    \item[Classi di Equivalenza Individuate] ~\\
     \begin{itemize}
         \item \textbf{CE1 (Valida - No Filtri):} Input: \texttt{start=undefined}. $\rightarrow$ Atteso: Query senza clausole temporali.
         \item \textbf{CE2 (Valida - Range):} Input: \texttt{start=2025-06-01, end=2025-06-30}. $\rightarrow$ Atteso: Query con clausole \texttt{WHERE} su date.
@@ -113,7 +101,7 @@ it("dovrebbe eseguire la query spaziale con i parametri corretti", async () => {
     
     \item[Strategia di Testing] Test di integrazione dei componenti (Controller) con Mock dei Repository (\texttt{postsRepository}, \texttt{userRepository}). Le asserzioni (\texttt{expect}) fungono da \textbf{Oracolo} per verificare i codici di stato HTTP.
     
-    \item[Classi di Equivalenza Individuate]
+    \item[Classi di Equivalenza Individuate] ~\\
     \begin{itemize}
         \item \textbf{CE1 (Valida):} Input: \texttt{postId} esistente, \texttt{agentId} valido. $\rightarrow$ Atteso: \texttt{201 Created}, Email inviata.
         \item \textbf{CE2 (Non Valida - Immobile):} Input: \texttt{postId} inesistente. $\rightarrow$ Atteso: \texttt{404 Not Found} ("Immobile non trovato").
