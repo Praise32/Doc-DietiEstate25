@@ -7,7 +7,7 @@
 
 Questo capitolo descrive gli artefatti tecnici prodotti e i processi utilizzati per la gestione del codice sorgente, la qualità e il deployment.
 
-\section{Strumenti di Versioning: GitHub}
+\section{Strumenti di Versioning e CI/CD: GitHub}
 
 Per la gestione del codice sorgente e il versionamento del progetto, il team ha scelto di utilizzare GitHub. GitHub è una piattaforma di hosting basata sul sistema di controllo versione distribuito Git. Essa non si limita a fungere da archivio remoto per il codice, ma offre un ecosistema completo per il social coding, integrando strumenti per la gestione delle issue, la revisione del codice (Code Review) e l'automazione dei flussi di lavoro (CI/CD). La scelta di GitHub ha permesso di centralizzare lo sviluppo, garantendo un punto di riferimento unico e sincronizzato per tutti i membri del gruppo.
 
@@ -41,6 +41,17 @@ L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibil
     i permessi di accesso, proteggendo il ramo principale da modifiche non autorizzate o accidentali.
 \end{itemize}
 
+\subsection{Continuous Integration/Continuous Deployment (CI/CD)}
+Oltre al versionamento, il progetto sfrutta le \textbf{GitHub Actions} per automatizzare il ciclo di vita del software. È stata configurata una pipeline di CI/CD che viene eseguita ad ogni \textit{push} sul repository.
+La pipeline esegue automaticamente:
+\begin{itemize}
+    \item \textbf{Installazione delle dipendenze:} Verifica che l'ambiente sia riproducibile.
+    \item \textbf{Linting e Type Checking:} Esegue ESLint e il compilatore TypeScript per rilevare errori statici.
+    \item \textbf{Testing Automatizzato:} Esegue la suite di test (Jest) per garantire che le nuove modifiche non introducano regressioni.
+\end{itemize}
+Solo se tutti i passaggi della pipeline hanno esito positivo, il codice è considerato valido per il merge.
+
+
 \section{Report di Qualità del Codice (SonarQube)}
 La qualità del software non si misura solo attraverso il corretto funzionamento delle funzionalità, 
 ma anche tramite la struttura interna del codice sorgente. Adottare standard elevati di Clean Code 
@@ -54,6 +65,7 @@ minimizzando il rischio di regressioni.
     \caption{Report di qualità del codice con SonarQube }
     \label{fig:Sonar1}
 \end{figure}
+
 
 
 \subsection{Analisi Statica con SonarQube}
@@ -78,12 +90,20 @@ L'analisi si è focalizzata sulle seguenti metriche chiave:
     \label{fig:Sonar2}
 \end{figure}
 
-\section{Containerizzazione (Dockerfile)}
+\section{Containerizzazione (Docker)}
 % Riferimento Traccia: "Codice Sorgente sviluppato, comprensivo di eventuale Dockerfile."
 % Riferimenti Slide: 24 - Virtualizzazione e Cloud.pdf
-Come richiesto, il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. Di seguito è riportato il \texttt{Dockerfile} utilizzato per il backend Express:
+Il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. È stata adottata una strategia di \textbf{Multi-stage build} per ottimizzare le dimensioni dell'immagine finale e migliorare la sicurezza.
 
-\begin{lstlisting}[language=bash, caption={Dockerfile per il backend Node.js/Express}]
+Il processo si divide in due stadi:
+\begin{enumerate}
+    \item \textbf{Builder Stage:} Utilizza un'immagine Node completa per installare tutte le dipendenze e compilare il codice TypeScript.
+    \item \textbf{Production Runner Stage:} Utilizza un'immagine minimale (\texttt{node:20-slim}) copiando solo gli artefatti compilati (\texttt{dist/}) e le dipendenze di produzione, riducendo drasticamente la superficie di attacco e il peso dell'immagine.
+\end{enumerate}
+
+Di seguito è riportato il \texttt{Dockerfile} utilizzato:
+
+\begin{lstlisting}[language=bash, caption={Dockerfile Multi-stage per il backend}]
 # STAGE 1: Build
 FROM node:20-slim AS builder
 
@@ -93,7 +113,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Installa tutte le dipendenze
+# Installa tutte le dipendenze (incluse devDependencies per la build)
 RUN npm install
 
 # Copia il codice sorgente

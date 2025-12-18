@@ -35,13 +35,16 @@ Il design sfrutta inoltre un modello di deployment \textbf{Hybrid Cloud} (o Mult
 \section{Stack Tecnologico e Motivazioni}
 % Riferimento Traccia: "Descrizione e motivazione delle scelte tecnologiche adottate."
 La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla performance e dalla robustezza dell'ecosistema.
+
 \begin{description}
     \item[TypeScript] Scelto come linguaggio unificante sia per il frontend (Angular) che per il backend (Node.js/Express), permettendo la condivisione di interfacce e modelli e garantendo la type-safety.
-    \item[Angular (Frontend)] Scelto per la sua natura \textit{"opinionated"}, che fornisce una struttura robusta per la Dependency Injection, il routing e la gestione dei form (Reactive Forms).
-    \item[Express (Backend)] Scelto per la sua flessibilità e il suo ecosistema di middleware, ideale per la creazione rapida di API REST.
-    \item[Drizzle (ORM)] Scelto come ORM moderno "TypeScript-first". La sua integrazione con \textbf{Zod} (\texttt{drizzle-zod}) permette di generare automaticamente schemi di validazione API direttamente dallo schema del database, garantendo la coerenza dei dati end-to-end.
-    \item[Neon (Database)] Scelto come provider PaaS per PostgreSQL per la sua capacità di "scalare a zero" (serverless) e per la gestione efficiente delle connessioni.
-    \item[AWS S3 (Storage)] Scelto come standard de-facto per lo storage di oggetti, per la sua affidabilità e scalabilità.
+    \item[Express.js v5 (Backend)] Scelto per la sua flessibilità e il suo ecosistema di middleware. La versione 5 offre una gestione migliorata delle Promise e degli errori asincroni.
+    \item[Zod \& express-zod-safe] Utilizzati per la validazione rigorosa degli input a runtime. Zod permette di definire schemi di validazione che agiscono anche come definizioni di tipo TypeScript, garantendo che i dati in ingresso rispettino il formato atteso prima di raggiungere la logica di business.
+    \item[Drizzle (ORM)] Scelto come ORM moderno "TypeScript-first". La gestione delle migrazioni avviene in modalità "Code-First" tramite \textbf{Drizzle Kit}.
+    \item[PostgreSQL \& PostGIS (Database)] Ospitato su \textbf{NeonDB} (Serverless). L'estensione \textbf{PostGIS} è stata integrata per gestire dati geospaziali complessi, essenziali per le funzionalità di ricerca "vicino a me".
+    \item[Passport.js (Auth)] Middleware di autenticazione modulare che gestisce le strategie di accesso (Locale, Google OAuth, JWT).
+    \item[Nodemailer (Communication)] Libreria per l'invio di email transazionali asincrone (es. conferme appuntamenti, inviti).
+    \item[AWS S3 (Storage)] Scelto come standard de-facto per lo storage di oggetti. L'upload avviene in streaming tramite \texttt{multer-s3}, evitando il salvataggio temporaneo su disco del server.
 \end{description}
 
 \section{Pattern di Design del Backend (Express)}
@@ -53,16 +56,22 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
 \subsection{Architettura a 3 Livelli (3-Tier Architecture)}
 Il backend Express è strutturato logicamente secondo una \textbf{3-Tier Architecture}, separando nettamente le responsabilità:
 \begin{itemize}
-    \item \textbf{Presentation Layer:} Gestito dai Controller (Routes), si occupa di ricevere le richieste HTTP e validare l'input.
-    \item \textbf{Application Logic Layer:} Gestito dai Service, contiene la logica di business e le regole del dominio.
-    \item \textbf{Data Layer:} Gestito dai Repository/DAO, si occupa della persistenza e del recupero dei dati.
+    \item \textbf{Presentation Layer (API Routes):} Gestito dai Controller, si occupa di ricevere le richieste HTTP e validare l'input tramite \textbf{Zod} (\texttt{express-zod-safe}).
+    \item \textbf{Business Logic Layer:} Distribuita tra i controller e servizi helper specifici (es. \texttt{invites.router.ts}), contiene le regole del dominio.
+    \item \textbf{Data Access Layer (Repository Pattern):} Isola le query al database. Il resto dell'applicazione non interagisce mai direttamente con l'ORM, ma utilizza metodi astratti (es. \texttt{postsRepository.getPostsNearby}).
 \end{itemize}
 
 \subsection{Repository Pattern (DAO)}
 Per disaccoppiare la logica di business dai dettagli implementativi del database, è stato implementato il \textbf{Repository Pattern}, accademicalmente noto come \textbf{DAO (Data Access Object)}. I file in \texttt{src/repository/} incapsulano le query Drizzle, fornendo un'interfaccia astratta al livello superiore.
 
 \subsection{Strategy Pattern (Passport.js)}
-Per la gestione dell'autenticazione è stato utilizzato lo \textbf{Strategy Pattern} tramite la libreria Passport.js. Questo pattern comportamentale permette di definire una famiglia di algoritmi (le strategie di login: \textit{Local Strategy}, \textit{Google OAuth Strategy}, \textit{JWT Strategy}), incapsularli e renderli intercambiabili a runtime senza modificare il client che li utilizza.
+Per la gestione dell'autenticazione è stato utilizzato lo \textbf{Strategy Pattern} tramite la libreria Passport.js. Sono state implementate tre strategie distinte:
+\begin{itemize}
+    \item \textbf{LocalStrategy:} Gestisce il login tradizionale email/password, utilizzando \texttt{bcryptjs} per l'hashing sicuro delle credenziali.
+    \item \textbf{GoogleStrategy:} Implementa il protocollo OAuth 2.0 per il social login, migliorando l'esperienza utente.
+    \item \textbf{JwtStrategy:} Protegge gli endpoint privati verificando la validità del token presente nell'header della richiesta.
+\end{itemize}
+Questo è integrato con un sistema \textbf{RBAC (Role-Based Access Control)} per la gestione granulare dei permessi (admin, support, manager, agent, customer).
 
 \subsection{Facade Pattern (API Routes)}
 I file di routing (es. \texttt{posts.router.ts}) implementano il \textbf{Facade Pattern}. Essi forniscono un'interfaccia unificata e semplificata (l'endpoint REST) a un insieme di interfacce in un sottosistema (validazione, upload S3, scrittura DB, invio email), nascondendo la complessità della logica di business al client.
@@ -90,3 +99,21 @@ La gestione degli eventi asincroni e della comunicazione tra componenti è reali
 
 \subsection{Inversion of Control (IoC) e Dependency Injection}
 Angular implementa nativamente il principio di \textbf{Inversion of Control (IoC)} attraverso il meccanismo della \textbf{Dependency Injection (DI)}. I componenti non istanziano direttamente le proprie dipendenze (es. \texttt{new AuthService()}), ma le dichiarano nel costruttore. È il framework (l'Injector) a occuparsi della creazione e dell'iniezione delle istanze, migliorando la modularità e la testabilità del codice.
+
+
+\section{Servizi Esterni e Integrazioni}
+
+\subsection{Motore Geospaziale (PostGIS)}
+Per supportare le funzionalità di ricerca basate sulla posizione, il database PostgreSQL è stato potenziato con l'estensione \textbf{PostGIS}.
+La tabella \texttt{posts} utilizza il tipo di dato nativo \texttt{geography}. Le query spaziali (es. ricerca per raggio) sfruttano le funzioni native \texttt{ST\_DWithin} e \texttt{ST\_Distance}, garantendo calcoli precisi su coordinate GPS sferiche, superiori per accuratezza rispetto a semplici calcoli euclidei.
+
+\subsection{Communication Layer (Email)}
+Il sistema integra un servizio di notifica transazionale asincrono, implementato tramite \textbf{Nodemailer} configurato su SMTP Gmail (SSL/465).
+Il servizio (\texttt{email.ts}) è disaccoppiato dai controller e gestisce:
+\begin{itemize}
+    \item \textbf{Onboarding:} Invio di token firmati digitalmente per la registrazione sicura di Manager e Agenti.
+    \item \textbf{Workflow Appuntamenti:} Un sistema di notifiche a tre stati (Richiesta Cliente $\rightarrow$ Conferma/Rifiuto Agente) che utilizza template HTML dinamici per comunicare date e note operative.
+\end{itemize}
+
+\subsection{Integrazione Meteo (OpenMeteo)}
+Per arricchire l'esperienza di prenotazione, il backend interroga le API di \textbf{OpenMeteo}. Questo permette di fornire all'utente previsioni meteorologiche contestuali alla posizione esatta dell'immobile e alla data dell'appuntamento, supportando il processo decisionale.
