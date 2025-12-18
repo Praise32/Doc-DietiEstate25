@@ -84,36 +84,43 @@ L'analisi si è focalizzata sulle seguenti metriche chiave:
 Come richiesto, il backend è stato containerizzato tramite \textbf{Docker} per garantire portabilità e riproducibilità. Di seguito è riportato il \texttt{Dockerfile} utilizzato per il backend Express:
 
 \begin{lstlisting}[language=bash, caption={Dockerfile per il backend Node.js/Express}]
-# Stage 1: Build
-FROM node:18-alpine AS builder
-WORKDIR /usr/src/app
+# STAGE 1: Build
+FROM node:20-slim AS builder
 
-# Copia package.json e installa le dipendenze
+WORKDIR /app
+
+# Copia i file di configurazione
 COPY package*.json ./
+COPY tsconfig.json ./
+
+# Installa tutte le dipendenze
 RUN npm install
 
-# Copia il resto del codice sorgente
+# Copia il codice sorgente
 COPY . .
 
-# Compila il codice TypeScript
+# Compila il TypeScript
 RUN npm run build
 
-# Stage 2: Produzione
-FROM node:18-alpine
-WORKDIR /usr/src/app
+# STAGE 2: Production Runner
+FROM node:20-slim
 
-# Copia solo i file necessari dalla build precedente
-COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/dist ./dist
+WORKDIR /app
 
-# Installa solo le dipendenze di produzione
-RUN npm ci --only=production
+# Copia solo package.json per installare le dipendenze di produzione
+COPY package*.json ./
 
-# Esponi la porta
-EXPOSE 3000
+# Installa SOLO le dipendenze necessarie per eseguire
+RUN npm install --production
+
+# Copia la build compilata dallo stage precedente
+COPY --from=builder /app/dist ./dist
+
+# Espone la porta
+EXPOSE 5003
 
 # Comando di avvio
-CMD [ "node", "dist/index.js" ]
+CMD ["npm", "start"]
 \end{lstlisting}
 
 \section{File di Build Automatica}

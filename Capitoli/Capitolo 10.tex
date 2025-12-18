@@ -1,52 +1,161 @@
-\chapter{Valutazione Euristica degli Esperti}
-\label{cap:valutazione_euristica}
+\chapter{Validazione e Collaudo dell'Usabilità}
+\label{cap:validazione_usabilita}
 
-In questo capitolo viene affrontata la fase di ispezione dell'usabilità di DietiEstates25 condotta 
-attraverso il giudizio di esperti. A differenza dei test con gli utenti, questo approccio metodologico 
-prevede che specialisti del dominio o di Human-Computer Interaction analizzino l'interfaccia per 
-diagnosticare potenziali violazioni dei principi di design e prevedere le difficoltà che l'utente 
-finale potrebbe incontrare.
+% Introduzione di raccordo
+Mentre nel capitolo precedente abbiamo illustrato come i feedback preliminari abbiano guidato le scelte di design (Valutazione Formativa), in questa sezione presentiamo la validazione effettuata sul prodotto software finale (Valutazione Sommativa).
+L'obiettivo è stato verificare se le aspettative di usabilità definite in fase di analisi sono state soddisfatte nell'implementazione reale.
 
-\vspace{0.3cm}
+\section{Metodologia di Validazione}
+La valutazione è stata condotta adottando un approccio misto:
+\begin{itemize}
+    \item \textbf{Metodi Ispettivi:} Revisione sistematica da parte di esperti (Expert Review).
+    \item \textbf{Test Empirici:} Sessioni di utilizzo controllato con utenti reali e raccolta dati tramite questionari strutturati.
+\end{itemize}
 
-La tecnica ispettiva adottata è la \textbf{Valutazione Euristica}, applicando come framework di 
-riferimento le celebri \textbf{"Eight Golden Rules of Interface Design" (Otto Regole d'Oro)} teorizzate 
-da Ben Shneiderman. Questi principi costituiscono una guida fondamentale per garantire un'interazione 
-efficace e priva di frustrazioni:
+\section{Valutazione Euristica (Expert Review)}
+\label{sec:expert_review}
+
+È stata condotta un'ispezione basata sulle \textbf{8 Regole d'Oro di Shneiderman} per identificare violazioni dei principi di interazione prima del rilascio agli utenti.
+
+\subsection{Esito dell'Ispezione}
+L'analisi ha evidenziato una solida aderenza ai principi, grazie anche alle scelte di design "whitespace-oriented" validate nel capitolo precedente.
+
+\begin{longtable}{|p{8cm}|c|p{6cm}|}
+\hline
+\textbf{Euristica di Shneiderman} & \textbf{Esito} & \textbf{Note / Osservazioni} \\ \hline
+\endfirsthead
+\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- segue dalla pagina precedente}} \\ \hline
+\textbf{Euristica} & \textbf{Esito} & \textbf{Note} \\ \hline
+\endhead
+\hline \multicolumn{3}{r}{{\emph{continua nella pagina seguente}}} \\ \endfoot
+\hline
+\endlastfoot
+
+1. Coerenza (Consistency) & \checkmark & Layout e colori uniformi tra le sezioni (come da feedback preliminari). \\ \hline
+2. Scorciatoie per esperti & $\sim$ & Assenti hotkeys, ma la navigazione è rapida tramite menu. \\ \hline
+3. Feedback informativo & \checkmark & Notifiche (Toast) presenti per ogni cambio di stato. \\ \hline
+4. Dialoghi chiusi & \checkmark & Messaggi di conferma chiari al termine dei processi. \\ \hline
+5. Prevenzione errori & \checkmark & Validazione form rigorosa lato client. \\ \hline
+6. Reversibilità (Undo) & \textbf{NO} & Manca un tasto "Annulla" immediato per azioni distruttive. \\ \hline
+7. Controllo utente & \checkmark & L'utente può navigare e resettare i filtri liberamente. \\ \hline
+8. Basso carico cognitivo & \checkmark & L'interfaccia pulita riduce lo sforzo di memoria. \\
+\hline
+\caption{Checklist basata sulle 8 Regole d'Oro di Shneiderman}
+\label{tab:expert_review}
+\end{longtable}
+
+\section{Validazione Sperimentale con Utenti Reali}
+\label{sec:user_testing}
+
+Per confermare l'efficacia del sistema in scenari d'uso reali, è stato condotto un \textbf{Field Test} esteso coinvolgendo un campione di \textbf{23 utenti}. Il test ha permesso di raccogliere dati quantitativi sulle performance e suggerimenti qualitativi per le evoluzioni future del prodotto.
+
+\subsection{Profilazione del Campione}
+A differenza dei test preliminari, questa sessione di validazione ha coinvolto un'utenza eterogenea, garantendo una copertura completa dei dispositivi e delle motivazioni d'uso:
+
+\begin{itemize}
+    \item \textbf{Dispositivi Utilizzati:} Il test ha validato la natura \textit{responsive} dell'applicazione. Il 50\% degli utenti ha utilizzato un Computer Desktop/Laptop, il 30\% ha testato l'app da Smartphone e il 20\% da Tablet.
+    \item \textbf{Rapporto con il Mercato:} Il campione include una percentuale significativa di utenti motivati: il \textbf{40,9\%} sta attivamente cercando casa, mentre il restante si divide tra curiosi (31,8\%) e tester tecnici (27,3\%).
+\end{itemize}
+
+ \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm1.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm}
+ \end{figure}
+
+\subsection{Analisi dei Risultati Quantitativi}
+L'analisi delle risposte al questionario strutturato evidenzia un alto gradimento delle funzionalità core.
+
+\subsubsection{Ricerca e Navigazione}
+\begin{itemize}
+    \item \textbf{Primo Impatto:} Alla richiesta \textit{"Quanto è stato facile capire come iniziare la ricerca?"}, il \textbf{90\%} degli utenti ha assegnato un punteggio alto (4 o 5), confermando l'efficacia della Home Page.
+    \item \textbf{Filtri:} Il \textbf{70\%} degli utenti ha utilizzato con successo i filtri avanzati (Prezzo, Città, Stanze) trovando ciò che cercava, mentre una parte minore (15\%) ha preferito la navigazione diretta su mappa.
+    \item \textbf{Geolocalizzazione:} La funzione \textit{"Cerca vicino a me"} è stata percepita come un valore aggiunto, giudicata utile dall'\textbf{85\%} dei partecipanti.
+\end{itemize}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm2.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm2}
+ \end{figure}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm3.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm3}
+ \end{figure}
+
+\subsubsection{Consultazione e Mappa}
+La Mappa Interattiva si conferma uno dei punti di forza del progetto:
+\begin{itemize}
+    \item L'\textbf{80\%} dei tester ha valutato l'esperienza mappa con il punteggio massimo (5/5).
+    \item Nella scheda immobile, il 90\% degli utenti ha ritenuto le informazioni (Prezzo, Indirizzo, Descrizione) complete e chiare.
+    \item Il caricamento delle foto è stato giudicato veloce e fluido dal \textbf{95\%} del campione, validando l'ottimizzazione degli asset multimediali.
+\end{itemize}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm4.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm4}
+ \end{figure}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm5.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm5}
+ \end{figure}
+
+\subsubsection{Processo di Prenotazione e Autenticazione}
+Il flusso di conversione (prenotazione visita) e l'accesso al sistema non hanno presentato frizioni:
+\begin{itemize}
+    \item \textbf{Prenotazione:} Il 76,5\% degli utenti ha ritenuto il processo "Molto semplice" (5/5). Dato cruciale è che il \textbf{100\%} degli utenti ha dichiarato che lo stato della richiesta (In attesa/Confermata) è chiaro, eliminando ambiguità.
+    \item \textbf{Login/Registrazione:} Nessun utente ha riscontrato blocchi. In particolare, il \textbf{38,9\%} ha utilizzato con successo il \textit{Login con Google}, validando l'integrazione con le API di autenticazione terze.
+\end{itemize}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm6.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm6}
+ \end{figure}
+
+\subsection{System Usability Scale (SUS) e Soddisfazione}
+Le metriche di usabilità percepita (Perceived Usability) hanno raggiunto livelli eccellenti:
 
 \begin{enumerate}
-    \item \textbf{Perseguire la coerenza (Consistency):} Garantire uniformità nell'uso di terminologia, 
-    icone, colori, layout e flussi operativi in ogni sezione dell'applicazione.
-
-    \item \textbf{Garantire l'usabilità universale (Shortcuts):} Soddisfare sia i novizi che gli utenti 
-    esperti, integrando acceleratori (come scorciatoie da tastiera o menu rapidi) che velocizzino 
-    l'interazione per chi ha familiarità con il sistema.
-
-    \item \textbf{Offrire feedback informativo:} Il sistema deve comunicare costantemente il proprio 
-    stato all'utente, fornendo risposte visive o testuali immediate a ogni azione compiuta.
-
-    \item \textbf{Progettare dialoghi chiusi (Closure):} Le sequenze di azioni devono avere un inizio, 
-    una parte centrale e una fine ben definita, offrendo all'utente un senso di compimento al termine 
-    di un task (es. messaggio di successo).
-
-    \item \textbf{Prevenire e gestire gli errori:} L'interfaccia deve essere disegnata in modo da 
-    impedire agli utenti di commettere errori gravi e, qualora accadano, il sistema deve offrire 
-    meccanismi semplici per rilevarli e correggerli.
-
-    \item \textbf{Garantire la reversibilità delle azioni (Undo):} Le operazioni non devono essere 
-    definitive; l'utente deve poter tornare indietro o annullare un'azione ("via di uscita di emergenza") 
-    senza timore di danneggiare il lavoro svolto.
-
-    \item \textbf{Supportare il Locus of Control interno:} L'utente deve percepire di essere l'iniziatore 
-    delle azioni e di avere il pieno controllo del sistema, evitando sorprese o cambiamenti di stato 
-    non richiesti.
-
-    \item \textbf{Ridurre il carico della memoria a breve termine:} L'interfaccia deve favorire il 
-    riconoscimento piuttosto che il ricordo, limitando la quantità di informazioni che l'utente deve 
-    tenere a mente durante la navigazione.
+    \item \textbf{Facilità d'Uso:} Alla domanda \textit{"Penso che questa applicazione sia facile da usare"}, l'\textbf{88,9\%} ha risposto con il massimo punteggio (5/5).
+    \item \textbf{Apprendibilità (Learnability):} L'\textbf{83,3\%} concorda fortemente che la maggior parte delle persone imparerebbe a usare l'app molto rapidamente.
 \end{enumerate}
 
-\vspace{0.3cm}
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm7.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm7}
+ \end{figure}
 
-Dall'analisi ispettiva condotta sulle nostre interfacce applicando questi criteri, sono emerse le 
-seguenti considerazioni:
+\subsection{Feedback Qualitativi ed Evoluzioni Future}
+Lo spazio dedicato ai suggerimenti liberi non ha evidenziato bug critici, ma ha fornito spunti interessanti per nuove funzionalità (\textit{Feature Request}), dimostrando l'interesse degli utenti verso il prodotto. Le richieste principali emerse sono:
+
+\begin{itemize}
+    \item \textbf{Strumenti Finanziari:} Implementazione di una "Calcolatrice Mutuo" direttamente nella pagina dettaglio.
+    \item \textbf{Comunicazione:} Aggiunta di un sistema di "Chat interna" per contattare l'agente senza uscire dall'app.
+    \item \textbf{Retention:} Creazione di una "Lista dei Preferiti" (Wishlist) e di una cronologia "Visti di recente".
+    \item \textbf{Mappa Avanzata:} Visualizzazione dei Punti di Interesse (POI) sulla mappa di dettaglio.
+\end{itemize}
+
+  \begin{figure}[H]
+    \centering
+   \includegraphics[width=1\textwidth]{images/RisultatiGoogleForm8.png}
+    \caption{Sintesi grafica dei risultati del test di usabilità (Google Forms)}
+    \label{fig:RisultatiGoogleForm8}
+ \end{figure}
+
+
+\section{Conclusioni sulla Validazione}
+I dati raccolti su un campione significativo di 23 utenti confermano la robustezza di \textit{DietiEstates25}. L'assenza di segnalazioni di bug critici, unita all'alto tasso di successo nel login (incluso Google Auth) e nella prenotazione, certifica che il sistema è pronto per il rilascio in produzione. I suggerimenti raccolti costituiranno la base per la roadmap di sviluppo delle versioni successive (v2.0).
