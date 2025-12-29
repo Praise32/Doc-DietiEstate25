@@ -25,6 +25,8 @@ L'analisi viene eseguita localmente tramite lo script \texttt{npm run lint} e va
 % Riferimento Slide: "Unit Testing in Isolation" e "Testing BB e WB"
 La strategia di verifica dinamica si è concentrata sul \textbf{Unit Testing} dei componenti critici del backend. È stato adottato un approccio \textbf{Black-Box Testing}, basato sulla partizione in \textbf{Classi di Equivalenza} (Equivalence Class Partitioning) per definire gli scenari di test.
 
+\textbf{Nota sulla Copertura dei Test:} La strategia di testing ha adottato un approccio 'Risk-Based Testing'. Data la natura accademica del progetto e i vincoli temporali, la copertura (6.2\%) si è concentrata esclusivamente sui moduli 'Core Business' a più alta complessità ciclomatica e criticità, tralasciando deliberatamente il codice boilerplate, i DTO semplici e le configurazioni di framework. Nello specifico, sono stati testati in isolamento (con Mocking dei repository) i metodi critici: 'deleteAppointment' (sicurezza RBAC), 'getPostsNearby' (logica geospaziale complessa) e 'getAllAppointmentsForCalendar' (query dinamiche).
+
 Per garantire l'isolamento dei test (\textit{Test in Isolation}), tutte le dipendenze esterne (come il database e i servizi di terze parti) sono state sostituite da \textbf{Mock Objects} utilizzando le funzionalità di \texttt{jest.mock} e \texttt{jest.spyOn}.
 
 Di seguito sono riportati i dettagli di quattro metodi significativi sottoposti a test.
