@@ -45,6 +45,13 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
     \item[Passport.js (Auth)] Middleware di autenticazione modulare che gestisce le strategie di accesso (Locale, Google OAuth, JWT).
     \item[Nodemailer (Communication)] Libreria per l'invio di email transazionali asincrone (es. conferme appuntamenti, inviti).
     \item[AWS S3 (Storage)] Scelto come standard de-facto per lo storage di oggetti. L'upload avviene in streaming tramite \texttt{multer-s3}, evitando il salvataggio temporaneo su disco del server.
+    \item[Leaflet] Libreria JavaScript open-source scelta per il rendering delle mappe interattive nel frontend (Angular). È stata preferita a Google Maps SDK per la sua leggerezza, modularità e l'assenza di costi di licenza (cost-effective).
+    \item[OpenStreetMap \& Nominatim] Utilizzati rispettivamente come provider dei "tiles" (la grafica della mappa) e come servizio di \textit{Geocoding} (conversione da indirizzo testuale a coordinate Lat/Long). Questa combinazione garantisce l'indipendenza da provider proprietari.
+    \item[Open-Meteo API] API esterna integrata per fornire dati meteorologici in tempo reale. Arricchisce l'esperienza di prenotazione permettendo all'utente di valutare le condizioni meteo previste per la data della visita.
+    \item[FullCalendar \& ngx-fullcalendar] Libreria scelta per la gestione visuale e interattiva degli appuntamenti. Permette agli Agenti di visualizzare le visite confermate e in attesa su una griglia temporale (mensile/settimanale/giornaliera), superando la limitazione di una semplice lista tabellare e migliorando l'efficienza operativa (Operability).
+    \item[Quill \& ngx-markdown] Editor di testo arricchito (WYSIWYG) integrato per la creazione delle inserzioni. Consente agli agenti di formattare le descrizioni degli immobili (grassetti, elenchi puntati) per renderle più leggibili, mentre il rendering in Markdown garantisce sicurezza (sanitizzazione dell'HTML) e performance nella visualizzazione lato cliente.
+    \item[Lucide Angular] Set di icone vettoriali (SVG) ottimizzate per il tree-shaking. Scelte per garantire coerenza visiva e leggerezza rispetto a librerie più pesanti come FontAwesome, contribuendo ai tempi di caricamento ridotti.
+    \item[ngx-toastr] Sistema di notifiche "Toast" utilizzato per fornire feedback immediato e non intrusivo alle azioni dell'utente (es. "Salvataggio completato", "Errore di connessione"), soddisfacendo l'euristica di usabilità "Visibility of System Status".
 \end{description}
 
 \section{Pattern di Design del Backend (Express)}
@@ -79,6 +86,9 @@ I file di routing (es. \texttt{posts.router.ts}) costituiscono il \textbf{Presen
 \subsection{Chain of Responsibility (Middleware)}
 L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al successivo (\texttt{next()}) o interrompere il flusso (inviando una risposta di errore), disaccoppiando il mittente della richiesta dai ricevatori.
 
+\subsection{Singleton Pattern}
+Il pattern Singleton è utilizzato per la gestione della connessione al database. Il file \texttt{src/db/index.ts} esporta un'unica istanza dell'oggetto \texttt{db} (Drizzle Client), garantendo che l'applicazione utilizzi una sola pool di connessioni condivisa ed evitando il sovraccarico di connessioni multiple.
+
 \section{Pattern di Design del Frontend (Angular)}
 % Riferimento Traccia: "...design dell’interfaccia utente..."
 % Riferimenti Slide: 
@@ -100,15 +110,30 @@ La gestione degli eventi asincroni e della comunicazione tra componenti è reali
 \subsection{Inversion of Control (IoC) e Dependency Injection}
 Angular implementa nativamente il principio di \textbf{Inversion of Control (IoC)} attraverso il meccanismo della \textbf{Dependency Injection (DI)}. I componenti non istanziano direttamente le proprie dipendenze (es. \texttt{new AuthService()}), ma le dichiarano nel costruttore. È il framework (l'Injector) a occuparsi della creazione e dell'iniezione delle istanze, migliorando la modularità e la testabilità del codice.
 
+\subsection{Integrazione Componenti Complessi (Wrapper Pattern)}
+Per mantenere l'architettura Angular pulita e testabile, le librerie di terze parti complesse non vengono utilizzate direttamente nelle pagine, ma incapsulate all'interno di componenti wrapper dedicati (Dumb Components).
+\begin{itemize}
+    \item \textbf{Gestione Calendario:} La libreria FullCalendar è isolata nel componente AppointmentsComponent. Questo componente riceve gli appuntamenti grezzi dal backend (tramite il Service) e li trasforma in oggetti \texttt{EventInput} compatibili con la libreria. Questo design permette di cambiare la libreria di visualizzazione in futuro senza dover riscrivere la logica di recupero dati (business logic).
+    \item \textbf{Text Editing:} L'editor Quill è integrato nei form reattivi (Reactive Forms) di Angular. Utilizzando \texttt{ngx-quill}, il contenuto dell'editor viene sincronizzato automaticamente con il \texttt{FormControl} sottostante, garantendo che le validazioni (es. lunghezza minima descrizione) siano gestite centralmente dal framework e non dalla libreria esterna.
+\end{itemize}
+
 
 \section{Servizi Esterni e Integrazioni}
 
-\subsection{Motore Geospaziale (PostGIS)}
-Per supportare le funzionalità di ricerca basate sulla posizione, il database PostgreSQL è stato potenziato con l'estensione \textbf{PostGIS}.
-La tabella \texttt{posts} utilizza il tipo di dato nativo \texttt{geography}. Le query spaziali (es. ricerca per raggio) sfruttano le funzioni native \texttt{ST\_DWithin} e \texttt{ST\_Distance}, garantendo calcoli precisi su coordinate GPS sferiche, superiori per accuratezza rispetto a semplici calcoli euclidei.
+\subsection{Gestione Geospaziale (PostGIS) e Rendering Mappe (Leaflet)}
+Il sistema implementa una soluzione basata sull'orchestrazione tra \textbf{PostGIS (Backend)} e \textbf{Leaflet (Frontend)}, 
+utilizzando OpenStreetMap come tile provider. Il flusso dati adotta un approccio "raw-data": 
+il backend trasmette le coordinate geografiche nel formato standard WKB (Well-Known Binary) codificato in esadecimale, 
+ottimizzando il payload di rete. Lato client, la deserializzazione è delegata al modulo di utility \texttt{postgis-utils.ts}, 
+dove la funzione \texttt{decodePostGISLocation} converte lo stream di byte in coordinate lat e lng (float64). 
+Questi dati normalizzati vengono iniettati nel componente riutilizzabile \texttt{MapComponent} 
+tramite binding (\texttt{[markers]}), il quale gestisce il rendering visivo e l'interattività, emettendo eventi di 
+output (\texttt{mapClick}) per attivare filtri di ricerca geolocalizzati (ricerca per raggio) direttamente dall'interfaccia utente.
+
+Grazie a PostGIS la tabella \texttt{posts} utilizza il tipo di dato nativo \texttt{geography}. Le query spaziali (come appunto la ricerca per raggio) sfruttano le funzioni native \texttt{ST\_DWithin} e \texttt{ST\_Distance}, garantendo calcoli precisi su coordinate GPS sferiche, superiori per accuratezza rispetto a semplici calcoli euclidei.
 
 \subsection{Communication Layer (Email)}
-Il sistema integra un servizio di notifica transazionale asincrono, implementato tramite \textbf{Nodemailer} configurato su SMTP Gmail (SSL/465).
+Il sistema integra un servizio di notifica transazionale asincrono, implementato tramite \textbf{Nodemailer} configurato su SMTP Gmail.
 Il servizio (\texttt{email.ts}) è disaccoppiato dai controller e gestisce:
 \begin{itemize}
     \item \textbf{Onboarding:} Invio di token firmati digitalmente per la registrazione sicura di Manager e Agenti.
