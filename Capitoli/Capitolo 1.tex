@@ -95,10 +95,21 @@ utenti e dei servizi.
     l'amministratore o il gestore generano un link univoco che, una volta inviato all'utente, consente 
     la registrazione diretta con il ruolo specifico pre-assegnato.
 
-    \item \textbf{Gestione Notifiche e Appuntamenti:} Il sistema deve garantire un flusso di comunicazione 
-    proattivo verso gli utenti. È richiesto l'invio automatico di aggiornamenti (tramite email o notifiche 
-    interne) relativi allo stato delle richieste di appuntamento (es. in attesa, confermato, rifiutato), 
-    permettendo a clienti e agenti di monitorare l'evoluzione delle prenotazioni in tempo reale.
+    \item \textbf{Sistema di Notifiche Real-Time:} Il sistema deve implementare un meccanismo di notifiche 
+    in tempo reale per garantire la tempestiva comunicazione degli aggiornamenti relativi agli appuntamenti. 
+    Le notifiche devono essere differenziate per ruolo utente:
+    \begin{itemize}
+        \item \textit{Per i Customer:} Notifiche automatiche relative a conferme, rifiuti o riprogrammazioni 
+        degli appuntamenti richiesti, con dettagli su data, ora e immobile di riferimento.
+        \item \textit{Per gli Agent (e ruoli amministrativi):} Notifiche relative alle nuove richieste di 
+        appuntamento da parte dei clienti, per consentire una gestione rapida delle prenotazioni.
+    \end{itemize}
+    Il sistema deve fornire un doppio canale di feedback: notifiche temporanee (toast) per aggiornamenti 
+    immediati e un centro notifiche persistente accessibile dall'interfaccia utente, dove l'utente può 
+    consultare lo storico delle comunicazioni, visualizzare notifiche non lette e accedere rapidamente 
+    alle sezioni rilevanti dell'applicazione. Le notifiche devono essere persistite localmente per 
+    garantire la consultabilità anche dopo il riavvio dell'applicazione, e devono includere timestamp, 
+    stato di lettura e azioni contestuali (es. navigazione diretta alla pagina appuntamenti).
 
     \item \textbf{Gestione Inserzioni:} La facoltà di caricare e pubblicare nuovi annunci immobiliari 
     è riservata esclusivamente ai ruoli operativi (Admin, Support, Manager, Agent). L'utente con ruolo 
