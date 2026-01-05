@@ -114,22 +114,15 @@ immediatezza visiva, costituiscono un \textbf{ponte comunicativo indispensabile}
 e stakeholder, garantendo che la logica operativa sia chiara, condivisa e priva di ambiguità prima 
 della fase di implementazione.
 
-\subsection{Registrazione Utente}
+\subsection{Cambio Password (Admin)}
 
-Il diagramma descrive il flusso di registrazione di un nuovo utente sulla piattaforma. L'attore compila 
-il modulo e, dopo una prima \textbf{validazione client-side} sulla coerenza delle password, il componente 
-frontend invia una richiesta POST al server. Il backend riceve i dati ed esegue controlli di integrità 
-tramite \textbf{schema Zod}, verificando successivamente l'unicità dell'email nel database PostgreSQL 
-per evitare duplicati. Se i controlli hanno esito positivo, la password viene \textbf{criptata} e 
-l'utente viene salvato; il sistema genera quindi un \textbf{token JWT} per l'autenticazione automatica 
-e reindirizza l'utente alla Home Page. In caso di errore, come un'email già esistente, il server 
-restituisce un codice di conflitto (409) che viene gestito dall'interfaccia mostrando un avviso specifico.
+Questo diagramma descrive la procedura di sicurezza per la modifica delle credenziali di accesso da parte di un amministratore. L'interazione ha inizio sul Frontend con la compilazione del modulo, dove vengono applicate regole di validazione immediata (lunghezza minima e corrispondenza tra i campi della nuova password). A seguito dell'invio, il Backend esegue una serie di controlli sequenziali critici: verifica la validità del token JWT e il ruolo dell'utente, per poi validare i dati tramite schema Zod. Il cuore della logica risiede nel confronto crittografico: il sistema verifica che la "vecchia password" fornita corrisponda all'hash salvato nel database. Solo in caso di esito positivo, la nuova password viene cifrata e salvata, restituendo un feedback di successo che innesca il reindirizzamento dell'utente alla Home Page.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDRegistrazione.png}
-    \caption{Diagramma di Sequenza: Registrazione Utente}
-    \label{fig:SD_Registrazione}
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDCambioPassword.png}
+    \caption{Diagramma di Sequenza: Cambio Password (Admin)}
+    \label{fig:SD_CambioPassword}
 \end{figure}
 
 \subsection{Creazione Inserzione (Immobile)}
@@ -150,22 +143,15 @@ venga pubblicato solo se completo di tutti i dati essenziali.
     \label{fig:SD_CreaInserzione}
 \end{figure}
 
-\subsection{Ricerca Immobile}
+\subsection{Gestione Agenti Non Assegnati}
 
-Il diagramma di sequenza mostra le dinamiche di ricerca e filtraggio degli immobili da parte dell'utente. 
-All'inizializzazione del componente, il sistema esegue una \textbf{query automatica} per mostrare gli 
-annunci più recenti o in evidenza. Quando l'utente applica filtri specifici (come località, tipologia 
-o fascia di prezzo), il Client invia una richiesta HTTP GET con i parametri corrispondenti. Il backend 
-traduce questi parametri in una \textbf{query SQL ottimizzata} per estrarre dal database solo le 
-corrispondenze pertinenti. Viene inoltre evidenziato il meccanismo di \textbf{paginazione ("Load More")}, 
-che permette all'utente di caricare risultati successivi in modo incrementale, migliorando le prestazioni 
-e l'usabilità dell'interfaccia.
+Il diagramma illustra il flusso amministrativo per l'associazione di agenti immobiliari alle rispettive agenzie. Il processo si articola in due fasi: inizialmente, al caricamento del componente, il sistema interroga il backend per ottenere la lista degli utenti con ruolo "Agent" che non presentano ancora affiliazioni (campo agency\_id nullo). Il server, verificati i permessi di amministrazione, restituisce l'elenco filtrato. Nella seconda fase, l'amministratore seleziona un agente e l'agenzia di destinazione, inviando una richiesta di aggiornamento. Il backend valida l'esistenza delle entità e procede all'assegnazione: aggiorna il record dell'utente collegandolo all'agenzia e incrementa il contatore degli agenti di quest'ultima. Il sistema gestisce puntualmente eventuali errori (es. agenzia non trovata) o conferma il successo dell'operazione aggiornando la vista in tempo reale.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDRicercaImmobile.png}
-    \caption{Diagramma di Sequenza: Ricerca Immobile}
-    \label{fig:SD_RicercaImmobile}
+    \includegraphics[width=0.9\textwidth]{SequenceDiagram/SDGestioneUnassignedAgents.png}
+    \caption{Diagramma di Sequenza: Gestione Agenti Non Assegnati}
+    \label{fig:SD_GestioneAgentiNonAssegnati}
 \end{figure}
 
 \subsection{Gestione Appuntamenti}
