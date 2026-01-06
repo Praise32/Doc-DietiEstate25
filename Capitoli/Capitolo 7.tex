@@ -11,6 +11,37 @@ Questo capitolo descrive gli artefatti tecnici prodotti e i processi utilizzati 
 
 Per la gestione del codice sorgente e il versionamento del progetto, il team ha scelto di utilizzare GitHub. GitHub è una piattaforma di hosting basata sul sistema di controllo versione distribuito Git. Essa non si limita a fungere da archivio remoto per il codice, ma offre un ecosistema completo per il social coding, integrando strumenti per la gestione delle issue, la revisione del codice (Code Review) e l'automazione dei flussi di lavoro (CI/CD). La scelta di GitHub ha permesso di centralizzare lo sviluppo, garantendo un punto di riferimento unico e sincronizzato per tutti i membri del gruppo.
 
+\subsection{Organizzazione dei Repository}
+Per garantire una netta separazione delle responsabilità e facilitare lo sviluppo parallelo, il team ha adottato una strategia a \textbf{due repository distinti}:
+
+\begin{itemize}
+    \item \textbf{Repository Frontend:} Contiene il codice sorgente dell'interfaccia utente, una Single-Page Application (SPA) sviluppata con \textbf{Angular} e \textbf{TypeScript}. Include componenti UI, servizi per la comunicazione con le API, moduli di routing, template HTML e fogli di stile. La separazione permette di gestire autonomamente le dipendenze Angular (Leaflet, FullCalendar, ngx-quill, RxJS) e le configurazioni di build specifiche per il deployment del client.
+    
+    \item \textbf{Repository Backend:} Contiene il codice del server \textbf{Node.js/Express} scritto in TypeScript, le API REST, la logica di business, lo schema del database (Drizzle ORM) e le configurazioni per PostgreSQL con PostGIS. Include inoltre il Dockerfile per la containerizzazione e i file di configurazione per l'integrazione con servizi esterni (AWS S3, Nodemailer).
+\end{itemize}
+
+Questa architettura a repository multipli (multi-repo) offre diversi vantaggi operativi:
+\begin{itemize}
+    \item \textbf{Isolamento delle dipendenze:} Le librerie frontend (Angular, RxJS) e backend (Express, Drizzle) rimangono separate, evitando conflitti di versione.
+    \item \textbf{Pipeline CI/CD dedicate:} Ogni repository dispone della propria GitHub Action, permettendo build e deploy indipendenti.
+    \item \textbf{Cicli di rilascio autonomi:} È possibile aggiornare il frontend senza necessità di ridistribuire il backend e viceversa.
+    \item \textbf{Ownership chiara:} La separazione facilita l'assegnazione delle responsabilità e la gestione dei permessi di accesso.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/RepoFrontEnd.png}
+    \caption{Repository GitHub per il Frontend (Angular)}
+    \label{fig:RepoFrontEnd}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/RepoBackEnd.png}
+    \caption{Repository GitHub per il Backend (Node.js/Express)}
+    \label{fig:RepoBackEnd}
+\end{figure}
+
 \subsection{Vantaggi dell'adozione di GitHub}
 L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibili al flusso di lavoro del team, in particolare:
 

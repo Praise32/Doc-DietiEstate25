@@ -43,3 +43,8 @@ Thumbs.db
 # Misc
 *.log.*
 *.bak
+
+# Main PDF and busy files
+main.pdf
+main*.busy
+*.busy
