@@ -134,45 +134,12 @@ Il processo si divide in due stadi:
 
 Di seguito è riportato il \texttt{Dockerfile} utilizzato:
 
-\begin{lstlisting}[language=bash, caption={Dockerfile Multi-stage per il backend}]
-# STAGE 1: Build
-FROM node:20-slim AS builder
-
-WORKDIR /app
-
-# Copia i file di configurazione
-COPY package*.json ./
-COPY tsconfig.json ./
-
-# Installa tutte le dipendenze (incluse devDependencies per la build)
-RUN npm install
-
-# Copia il codice sorgente
-COPY . .
-
-# Compila il TypeScript
-RUN npm run build
-
-# STAGE 2: Production Runner
-FROM node:20-slim
-
-WORKDIR /app
-
-# Copia solo package.json per installare le dipendenze di produzione
-COPY package*.json ./
-
-# Installa SOLO le dipendenze necessarie per eseguire
-RUN npm install --production
-
-# Copia la build compilata dallo stage precedente
-COPY --from=builder /app/dist ./dist
-
-# Espone la porta
-EXPOSE 5003
-
-# Comando di avvio
-CMD ["npm", "start"]
-\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/Docker.png}
+    \caption{Dockerfile Multi-stage per il backend. Il processo è diviso in due stadi: Builder (compilazione TypeScript) e Production Runner (esecuzione con dipendenze minimali).}
+    \label{fig:Docker}
+\end{figure}
 
 \section{File di Build Automatica}
 % Riferimento Traccia: "File di build automatica"
