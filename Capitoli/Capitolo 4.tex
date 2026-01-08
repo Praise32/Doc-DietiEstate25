@@ -38,6 +38,7 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
 
 \begin{description}
     \item[TypeScript] Scelto come linguaggio unificante sia per il frontend (Angular) che per il backend (Node.js/Express), permettendo la condivisione di interfacce e modelli e garantendo la type-safety.
+    \item[Angular 21] Framework per Single Page Application (SPA). Utilizza TypeScript, componenti standalone e il nuovo block control flow syntax (\texttt{@if}, \texttt{@for}).
     \item[Express.js v5 (Backend)] Scelto per la sua flessibilità e il suo ecosistema di middleware. La versione 5 offre una gestione migliorata delle Promise e degli errori asincroni.
     \item[Zod \& express-zod-safe] Utilizzati per la validazione rigorosa degli input a runtime. Zod permette di definire schemi di validazione che agiscono anche come definizioni di tipo TypeScript, garantendo che i dati in ingresso rispettino il formato atteso prima di raggiungere la logica di business.
     \item[Drizzle (ORM)] Scelto come ORM moderno "TypeScript-first". La gestione delle migrazioni avviene in modalità "Code-First" tramite \textbf{Drizzle Kit}.
@@ -48,9 +49,8 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
     \item[Leaflet] Libreria JavaScript open-source scelta per il rendering delle mappe interattive nel frontend (Angular). È stata preferita a Google Maps SDK per la sua leggerezza, modularità e l'assenza di costi di licenza (cost-effective).
     \item[OpenStreetMap \& Nominatim] Utilizzati rispettivamente come provider dei "tiles" (la grafica della mappa) e come servizio di \textit{Geocoding} (conversione da indirizzo testuale a coordinate Lat/Long). Questa combinazione garantisce l'indipendenza da provider proprietari.
     \item[Open-Meteo API] API esterna integrata per fornire dati meteorologici in tempo reale. Arricchisce l'esperienza di prenotazione permettendo all'utente di valutare le condizioni meteo previste per la data della visita.
-    \item[FullCalendar \& ngx-fullcalendar] Libreria scelta per la gestione visuale e interattiva degli appuntamenti. Permette agli Agenti di visualizzare le visite confermate e in attesa su una griglia temporale (mensile/settimanale/giornaliera), superando la limitazione di una semplice lista tabellare e migliorando l'efficienza operativa (Operability).
-    \item[Quill \& ngx-markdown] Editor di testo arricchito (WYSIWYG) integrato per la creazione delle inserzioni. Consente agli agenti di formattare le descrizioni degli immobili (grassetti, elenchi puntati) per renderle più leggibili, mentre il rendering in Markdown garantisce sicurezza (sanitizzazione dell'HTML) e performance nella visualizzazione lato cliente.
-    \item[Lucide Angular] Set di icone vettoriali (SVG) ottimizzate per il tree-shaking. Scelte per garantire coerenza visiva e leggerezza rispetto a librerie più pesanti come FontAwesome, contribuendo ai tempi di caricamento ridotti.
+    \item[FullCalendar (@fullcalendar/angular)] Libreria scelta per la gestione visuale e interattiva degli appuntamenti. Permette agli Agenti di visualizzare le visite confermate e in attesa su una griglia temporale (mensile/settimanale/giornaliera), superando la limitazione di una semplice lista tabellare e migliorando l'efficienza operativa (Operability).
+    \item[Icone SVG (Lucide)] Set di icone vettoriali utilizzate come SVG inline nei template HTML, per coerenza visiva e leggerezza.
     \item[ngx-toastr] Sistema di notifiche "Toast" utilizzato per fornire feedback immediato e non intrusivo alle azioni dell'utente (es. "Salvataggio completato", "Errore di connessione"), soddisfacendo l'euristica di usabilità "Visibility of System Status".
 \end{description}
 
@@ -60,12 +60,17 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
 % 20 - Standard Software Architectures.pdf (3-Tier)
 % 19 - 20 -Design Patterns.pdf (DAO, Facade, Chain of Responsibility, Strategy)
 
-\subsection{Architettura a 3 Livelli (3-Tier Architecture)}
-Il backend Express è strutturato logicamente secondo una \textbf{3-Tier Architecture}, separando nettamente le responsabilità:
+\subsection{Architettura a 2 Livelli (Two-Tier Architecture)}
+Il backend Express è strutturato logicamente secondo una \textbf{Two-Tier Architecture}, 
+dove il livello di presentazione incorpora anche la logica di business:
 \begin{itemize}
-    \item \textbf{Presentation Layer (API Routes):} Gestito dai Controller, si occupa di ricevere le richieste HTTP e validare l'input tramite \textbf{Zod} (\texttt{express-zod-safe}).
-    \item \textbf{Business Logic Layer:} Distribuita tra i controller e servizi helper specifici (es. \texttt{invites.router.ts}), contiene le regole del dominio.
-    \item \textbf{Data Access Layer (Repository Pattern):} Isola le query al database. Il resto dell'applicazione non interagisce mai direttamente con l'ORM, ma utilizza metodi astratti (es. \texttt{postsRepository.getPostsNearby}).
+    \item \textbf{Presentation \& Business Logic Layer (Router/Controller):} I file in 
+    \texttt{src/api/routes/} combinano le responsabilità di Controller e Service. 
+    Ricevono le richieste HTTP, validano l'input tramite \textbf{Zod}, implementano 
+    la logica di business tramite funzioni helper locali (es. \texttt{createAgencyAsManager}, 
+    \texttt{resolveAgentInvite}) e orchestrano chiamate a più repository.
+    \item \textbf{Data Access Layer (Repository Pattern):} I file in \texttt{src/repository/} 
+    isolano le query al database tramite il pattern DAO, astraendo l'accesso a Drizzle ORM.
 \end{itemize}
 
 \subsection{Repository Pattern (DAO)}
@@ -80,11 +85,11 @@ Per la gestione dell'autenticazione è stato utilizzato lo \textbf{Strategy Patt
 \end{itemize}
 Questo è integrato con un sistema \textbf{RBAC (Role-Based Access Control)} per la gestione granulare dei permessi (admin, support, manager, agent, customer).
 
-\subsection{Layered Architecture (Presentation Layer)}
-I file di routing (es. \texttt{posts.router.ts}) costituiscono il \textbf{Presentation Layer} nell'architettura a strati. Essi fungono da entry-point che delegano la logica ai Service e ai Repository, separando nettamente la gestione delle richieste HTTP dalla logica di business. Il pattern strutturale utilizzato è la \textbf{Dependency Injection}, che permette di iniettare i servizi necessari nei controller, e la \textbf{Chain of Responsibility} per la gestione dei middleware di Express.
-
 \subsection{Chain of Responsibility (Middleware)}
-L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al successivo (\texttt{next()}) o interrompere il flusso (inviando una risposta di errore), disaccoppiando il mittente della richiesta dai ricevatori.
+L'architettura di Express si basa sul pattern \textbf{Chain of Responsibility}. Le funzioni 
+middleware (es. \texttt{authMiddleware}, \texttt{validationMiddleware}) sono organizzate 
+in una catena sequenziale. Ogni middleware decide se elaborare la richiesta, passarla al 
+successivo (\texttt{next()}) o interrompere il flusso inviando una risposta di errore.
 
 \subsection{Singleton Pattern}
 Il pattern Singleton è utilizzato per la gestione della connessione al database. Il file \texttt{src/db/index.ts} esporta un'unica istanza dell'oggetto \texttt{db} (Drizzle Client), garantendo che l'applicazione utilizzi una sola pool di connessioni condivisa ed evitando il sovraccarico di connessioni multiple.
@@ -96,26 +101,63 @@ Il pattern Singleton è utilizzato per la gestione della connessione al database
 % 19 - 20 -Design Patterns.pdf (Observer)
 % 25 - 26 - REST APIs.pdf (IoC)
 
-\subsection{Component-Based Architecture}
-Il frontend adotta un'\textbf{Architettura a Componenti}, enfatizzando l'uso della \textbf{Dependency Injection} per la gestione delle dipendenze e dell'\textbf{Observer Pattern} (tramite RxJS) come pilastri architetturali per la gestione reattiva dello stato:
+\subsection{Model-View-ViewModel (MVVM)}
+Il frontend adotta il pattern architetturale \textbf{MVVM}, variante del classico MVC 
+adatta alle applicazioni con data binding bidirezionale:
 \begin{itemize}
-    \item \textbf{Model:} I Servizi Angular che gestiscono i dati e la logica di business.
-    \item \textbf{View:} Il template HTML (struttura) e CSS (stile), privi di logica complessa.
-    \item \textbf{ViewModel:} La classe TypeScript del componente, che espone proprietà e metodi alla View tramite Data Binding.
+    \item \textbf{Model (Service Layer):} I Servizi Angular (\texttt{@Injectable}) 
+    gestiscono i dati e la comunicazione HTTP con il backend.
+    \item \textbf{View:} Il template HTML e gli stili SCSS, privi di logica complessa. 
+    Utilizzano direttive Angular per il binding reattivo.
+    \item \textbf{ViewModel (Component Class):} La classe TypeScript del componente 
+    espone proprietà e metodi alla View tramite Data Binding, gestendo eventi e 
+    interazioni utente.
 \end{itemize}
 
 \subsection{Observer Pattern (RxJS)}
-La gestione degli eventi asincroni e della comunicazione tra componenti è realizzata tramite la libreria \textbf{RxJS}, che implementa l'\textbf{Observer Pattern}. I servizi espongono flussi di dati sotto forma di \texttt{Observable} (Soggetti), ai quali i componenti si iscrivono (\texttt{subscribe}) fungendo da Osservatori. Questo garantisce un basso accoppiamento e una gestione reattiva degli aggiornamenti di stato.
+La gestione degli eventi asincroni è realizzata tramite \textbf{RxJS}, che implementa 
+l'\textbf{Observer Pattern} (GoF Behavioral). I \texttt{BehaviorSubject} nei servizi 
+agiscono come \textbf{Subject} (soggetti osservabili), mentre i componenti fungono da 
+\textbf{Observer} sottoscrivendosi tramite \texttt{subscribe()}. Quando lo stato cambia, 
+tutti gli observer vengono notificati automaticamente tramite \texttt{next()}.
+
+Esempio: \texttt{AuthService.currentUser\$} notifica automaticamente \texttt{NavbarComponent} 
+e altri componenti al cambio dell'utente autenticato.
 
 \subsection{Inversion of Control (IoC) e Dependency Injection}
 Angular implementa nativamente il principio di \textbf{Inversion of Control (IoC)} attraverso il meccanismo della \textbf{Dependency Injection (DI)}. I componenti non istanziano direttamente le proprie dipendenze (es. \texttt{new AuthService()}), ma le dichiarano nel costruttore. È il framework (l'Injector) a occuparsi della creazione e dell'iniezione delle istanze, migliorando la modularità e la testabilità del codice.
 
-\subsection{Integrazione Componenti Complessi (Wrapper Pattern)}
-Per mantenere l'architettura Angular pulita e testabile, le librerie di terze parti complesse non vengono utilizzate direttamente nelle pagine, ma incapsulate all'interno di componenti wrapper dedicati (Dumb Components).
+\subsection{Singleton Pattern (Servizi Angular)}
+I servizi Angular decorati con \texttt{@Injectable(\{ providedIn: 'root' \})} implementano 
+il pattern \textbf{Singleton} (GoF Creational). Il framework garantisce un'unica istanza 
+condivisa in tutta l'applicazione (es. \texttt{AuthService}, \texttt{NotificationService}), 
+evitando duplicazioni di stato e risorse.
+
+\subsection{Facade Pattern (Integrazione Librerie Esterne)}
+Per mantenere l'architettura Angular pulita e testabile, le librerie di terze parti 
+sono incapsulate tramite il pattern \textbf{Facade} (GoF Structural), che fornisce 
+un'interfaccia semplificata a sottosistemi complessi:
 \begin{itemize}
-    \item \textbf{Gestione Calendario:} La libreria FullCalendar è isolata nel componente AppointmentsComponent. Questo componente riceve gli appuntamenti grezzi dal backend (tramite il Service) e li trasforma in oggetti \texttt{EventInput} compatibili con la libreria. Questo design permette di cambiare la libreria di visualizzazione in futuro senza dover riscrivere la logica di recupero dati (business logic).
-    \item \textbf{Text Editing:} L'editor Quill è integrato nei form reattivi (Reactive Forms) di Angular. Utilizzando \texttt{ngx-quill}, il contenuto dell'editor viene sincronizzato automaticamente con il \texttt{FormControl} sottostante, garantendo che le validazioni (es. lunghezza minima descrizione) siano gestite centralmente dal framework e non dalla libreria esterna.
+    \item \textbf{MapComponent (Leaflet):} Il componente \texttt{shared/map/map.component.ts} 
+    funge da Facade per la libreria Leaflet. Espone input semplici (\texttt{markers}, 
+    \texttt{center}, \texttt{zoom}) e output (\texttt{mapClick}), nascondendo l'API 
+    complessa di Leaflet al resto dell'applicazione.
+    \item \textbf{AppointmentsComponent (FullCalendar):} La libreria FullCalendar è 
+    isolata nel componente dedicato. Riceve gli appuntamenti dal Service e li trasforma 
+    in oggetti \texttt{EventInput} compatibili con la libreria.
 \end{itemize}
+
+\subsection{Scelta Architetturale: Monolith}
+Il sistema è stato progettato come \textbf{Monolith modulare} anziché come architettura 
+a Microservizi. Come evidenziato da Martin Fowler, per sistemi di complessità medio-bassa, 
+l'overhead dei microservizi riduce la produttività. La scelta garantisce:
+\begin{itemize}
+    \item \textbf{Deployment semplificato:} Singolo artefatto da costruire e distribuire.
+    \item \textbf{Gestione dati:} Database singolo con transazioni ACID garantite.
+    \item \textbf{Sviluppo efficiente:} Codebase unificata, facile debugging e testing.
+\end{itemize}
+La scalabilità orizzontale rimane possibile grazie all'architettura \textbf{stateless} (JWT), 
+permettendo la replicazione del monolith su più nodi dietro un Load Balancer.
 
 
 \section{Servizi Esterni e Integrazioni}
