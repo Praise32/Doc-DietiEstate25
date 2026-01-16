@@ -146,3 +146,116 @@ Di seguito è riportato il \texttt{Dockerfile} utilizzato:
 La build automatica è gestita tramite gli script NPM definiti in \texttt{package.json} e orchestrati dal \texttt{Dockerfile}. Lo script \texttt{npm run build} (che esegue \texttt{tsc}) compila il codice TypeScript in JavaScript.
 
 Il deployment è automatizzato tramite \texttt{docker-compose.yml}, che orchestra l'avvio del container dell'applicazione e del database.
+
+\section{Deploy su Google Cloud Platform}
+% Riferimento Traccia: Deployment in produzione dell'applicazione
+Il deployment dell'applicazione in ambiente di produzione rappresenta una fase cruciale del ciclo di vita del software, richiedendo la scelta di una piattaforma affidabile, scalabile e sicura. Per questo progetto, il team ha selezionato \textbf{Google Cloud Platform (GCP)} come provider cloud, adottando in particolare il servizio \textbf{Cloud Run} per l'hosting dei container.
+
+\subsection{Google Cloud Run: Architettura Serverless}
+Google Cloud Run è un servizio serverless completamente gestito che consente di eseguire container stateless in un ambiente altamente scalabile. A differenza delle soluzioni IaaS tradizionali, Cloud Run astrae completamente la gestione dell'infrastruttura sottostante, permettendo agli sviluppatori di concentrarsi esclusivamente sulla logica applicativa.
+
+L'architettura adottata prevede il deploy di due servizi distinti:
+\begin{itemize}
+    \item \textbf{Servizio Frontend:} Container basato su nginx che espone la Single-Page Application Angular sulla porta 8080. L'immagine è stata ottimizzata per ridurre le dimensioni e i tempi di caricamento.
+    
+    \item \textbf{Servizio Backend:} Container Node.js/Express che espone le API REST sulla porta 5003. Include tutte le dipendenze necessarie per l'interazione con il database PostgreSQL, il sistema di storage S3 e i servizi di autenticazione OAuth.
+\end{itemize}
+
+Entrambi i servizi sono distribuiti nella regione \texttt{europe-west1} (Belgio), scelta per garantire bassa latenza agli utenti europei e conformità con le normative GDPR sulla residenza dei dati.
+
+\subsection{Processo di Deploy}
+Il processo di deploy si articola in quattro fasi principali, ciascuna delle quali contribuisce a garantire un'infrastruttura robusta e manutenibile.
+
+\subsubsection{Configurazione del Progetto GCP}
+La configurazione iniziale del progetto prevede l'impostazione della regione di default e l'abilitazione delle API necessarie. Il team ha abilitato tre servizi essenziali:
+\begin{itemize}
+    \item \texttt{cloudbuild.googleapis.com}: Consente la build automatizzata delle immagini Docker direttamente nel cloud.
+    \item \texttt{run.googleapis.com}: Fornisce l'accesso al servizio Cloud Run per l'esecuzione dei container.
+    \item \texttt{artifactregistry.googleapis.com}: Permette di creare un registro privato per le immagini Docker del progetto.
+\end{itemize}
+
+L'uso di Artifact Registry come registro privato offre vantaggi significativi rispetto a Docker Hub pubblico: maggiore sicurezza tramite controllo accessi IAM, scansione automatica delle vulnerabilità, e integrazione nativa con gli altri servizi GCP.
+
+\subsubsection{Creazione del Repository Artifact Registry}
+È stato creato un repository Docker denominato \texttt{dietiestates} nella regione \texttt{europe-west1}, configurato per ospitare tutte le immagini del progetto. Il percorso completo del registro è:
+\begin{center}
+    \texttt{europe-west1-docker.pkg.dev/dietiestate25/dietiestates}
+\end{center}
+
+\subsubsection{Build e Push delle Immagini}
+Le immagini Docker per frontend e backend sono state costruite localmente utilizzando i rispettivi Dockerfile ottimizzati con multi-stage build. Successivamente, le immagini sono state taggate seguendo la convenzione di nomenclatura di Artifact Registry e caricate nel registro privato. Questa fase garantisce che solo versioni verificate e testate del software vengano distribuite in produzione.
+
+\subsubsection{Deploy dei Servizi su Cloud Run}
+Il deploy effettivo su Cloud Run è stato configurato con particolare attenzione alle risorse allocate e alle variabili d'ambiente. Per il backend, la configurazione prevede:
+
+\begin{itemize}
+    \item \textbf{Allocazione risorse:} 512 MiB di memoria e 1 vCPU, dimensionate per gestire il carico previsto.
+    \item \textbf{Scalabilità:} Configurazione \texttt{min-instances=0} e \texttt{max-instances=10}, che consente di azzerare i costi in assenza di traffico e scalare automaticamente fino a 10 istanze durante i picchi.
+    \item \textbf{Gestione delle credenziali:} Tutte le variabili sensibili (chiavi JWT, credenziali AWS, client ID OAuth) sono state configurate tramite variabili d'ambiente criptate, evitando di includerle nel codice sorgente o nelle immagini Docker.
+    \item \textbf{Configurazione CORS:} Gli URL di frontend e backend sono stati registrati reciprocamente per consentire la comunicazione cross-origin in modo sicuro.
+\end{itemize}
+
+Il servizio frontend, essendo composto prevalentemente da asset statici, è stato configurato con risorse più contenute (256 MiB di memoria) e con le stesse politiche di scalabilità automatica.
+
+\subsection{Vantaggi Architetturali della Soluzione Adottata}
+
+\subsubsection{Scalabilità Automatica}
+Cloud Run implementa un sistema di autoscaling completamente automatizzato che monitora costantemente il traffico in ingresso e le metriche di performance. Quando il numero di richieste concorrenti supera la capacità delle istanze attive, la piattaforma avvia automaticamente nuove istanze in pochi secondi. Viceversa, durante i periodi di inattività, le istanze vengono gradualmente terminate fino ad arrivare a zero, eliminando completamente i costi di idle time.
+
+Questa caratteristica è particolarmente vantaggiosa per applicazioni con pattern di traffico variabile, consentendo di gestire picchi improvvisi (ad esempio durante il lancio di nuove proprietà immobiliari) senza sovradimensionare l'infrastruttura per la capacità massima teorica.
+
+\subsubsection{Gestione Semplificata}
+L'approccio serverless di Cloud Run elimina completamente la necessità di gestire server, applicare patch di sicurezza o configurare load balancer. Il team può concentrarsi esclusivamente sullo sviluppo applicativo, delegando a Google la gestione dell'infrastruttura sottostante.
+
+Ogni deploy genera una nuova \textit{revision}, permettendo di mantenere uno storico completo delle versioni distribuite. In caso di problemi, è possibile effettuare un rollback istantaneo a una revision precedente con un singolo comando, riducendo drasticamente il tempo di recupero da eventuali malfunzionamenti.
+
+\subsubsection{Sicurezza e Networking}
+Cloud Run fornisce nativamente certificati SSL/TLS gestiti automaticamente, garantendo che tutte le comunicazioni siano cifrate senza alcuna configurazione manuale. Gli URL pubblici generati per i servizi sono:
+
+\begin{itemize}
+    \item Frontend: \texttt{https://dietiestates-frontend-12428859047.europe-west1.run.app}
+    \item Backend: \texttt{https://dietiestates-backend-12428859047.europe-west1.run.app}
+\end{itemize}
+
+L'integrazione con Google Cloud IAM (Identity and Access Management) consente di definire politiche di accesso granulari, controllando chi può invocare i servizi e chi può modificarne la configurazione. Inoltre, la possibilità di configurare VPC connector permette, se necessario, di connettere i servizi Cloud Run a risorse private come database o servizi interni che non devono essere esposti su internet pubblico.
+
+\subsubsection{Modello di Pricing Pay-per-Use}
+A differenza dei modelli tradizionali basati su istanze sempre attive, Cloud Run addebita esclusivamente le risorse effettivamente consumate. Il costo è calcolato in base a:
+\begin{itemize}
+    \item Numero di richieste processate
+    \item Tempo di CPU utilizzato (in vCPU-secondi)
+    \item Memoria allocata durante l'esecuzione (in GiB-secondi)
+    \item Traffico di rete in uscita
+\end{itemize}
+
+Google offre inoltre un generoso tier gratuito mensile:
+\begin{itemize}
+    \item 2 milioni di richieste
+    \item 180.000 vCPU-secondi
+    \item 360.000 GiB-secondi di memoria
+    \item 1 GB di egress networking
+\end{itemize}
+
+Per un'applicazione con traffico moderato (circa 10.000 utenti attivi al mese), la stima dei costi si aggira tra i 5 e i 15 dollari mensili, rendendo la soluzione estremamente competitiva rispetto ad alternative basate su VM sempre attive o container orchestrati tradizionali.
+
+\subsection{Integrazione con l'Ecosistema GCP}
+Sebbene attualmente il progetto utilizzi principalmente Cloud Run e Artifact Registry, l'architettura è predisposta per sfruttare altri servizi dell'ecosistema Google Cloud Platform in future evoluzioni:
+
+\begin{itemize}
+    \item \textbf{Cloud Logging e Cloud Monitoring:} Permettono di centralizzare i log applicativi e creare dashboard personalizzate per il monitoraggio delle metriche di performance, con possibilità di configurare alert automatici su condizioni critiche.
+    
+    \item \textbf{Cloud SQL:} Offre un'alternativa al database PostgreSQL self-hosted, con backup automatici, alta disponibilità e patch di sicurezza gestite da Google.
+    
+    \item \textbf{Secret Manager:} Consente una gestione più sicura e centralizzata delle credenziali, con rotazione automatica delle chiavi e audit trail completo.
+    
+    \item \textbf{Cloud CDN:} Può essere configurato davanti al servizio frontend per cache distribuita degli asset statici, riducendo ulteriormente la latenza percepita dagli utenti globali.
+    
+    \item \textbf{Cloud Armor:} Fornisce protezione contro attacchi DDoS e permette di configurare un Web Application Firewall (WAF) per filtrare traffico malevolo.
+\end{itemize}
+
+\subsection{Considerazioni Finali sul Deployment}
+Il deploy su Google Cloud Run rappresenta una scelta strategica che bilancia efficacemente semplicità operativa, scalabilità e contenimento dei costi. L'architettura serverless adottata permette al team di iterare rapidamente sul prodotto, distribuendo nuove versioni con semplici comandi CLI o, in prospettiva futura, tramite pipeline CI/CD completamente automatizzate integrate con GitHub Actions.
+
+La configurazione attuale garantisce tutti i requisiti non funzionali del progetto: alta disponibilità (grazie alla distribuzione automatica su più zone), sicurezza (HTTPS obbligatorio, gestione sicura delle credenziali), e monitorabilità (integrazione nativa con gli strumenti di observability di GCP).
+
+Le URL di produzione sono operative e accessibili pubblicamente, consentendo agli utenti finali di accedere all'applicazione completa senza necessità di installazioni locali o configurazioni complesse.
