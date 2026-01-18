@@ -72,6 +72,44 @@ L'utilizzo di GitHub come strumento di versioning ha apportato benefici tangibil
     i permessi di accesso, proteggendo il ramo principale da modifiche non autorizzate o accidentali.
 \end{itemize}
 
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Commits_Frontend.png}
+        \caption{Frontend}
+        \label{fig:Commits_Frontend}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Commits_Backend.png}
+        \caption{Backend}
+        \label{fig:Commits_Backend}
+    \end{subfigure}
+    \caption{Grafici dei commit per i repository}
+    \label{fig:Commits_Graphs}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/CodeFrequency_Frontend.png}
+        \caption{Frontend}
+        \label{fig:CodeFrequency_Frontend}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/CodeFrequency_Backend.png}
+        \caption{Backend}
+        \label{fig:CodeFrequency_Backend}
+    \end{subfigure}
+    \caption{Frequenza delle modifiche (Code Frequency)}
+    \label{fig:CodeFrequency_Graphs}
+\end{figure}
+
 \subsection{Continuous Integration/Continuous Deployment (CI/CD)}
 Oltre al versionamento, il progetto sfrutta le \textbf{GitHub Actions} per automatizzare il ciclo di vita del software. È stata configurata una pipeline di CI/CD che viene eseguita ad ogni \textit{push} sul repository.
 La pipeline esegue automaticamente:

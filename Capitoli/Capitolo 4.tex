@@ -46,6 +46,7 @@ La scelta dello stack tecnologico è stata guidata dalla coerenza, dalla perform
     \item[Passport.js (Auth)] Middleware di autenticazione modulare che gestisce le strategie di accesso (Locale, Google OAuth, JWT).
     \item[Nodemailer (Communication)] Libreria per l'invio di email transazionali asincrone (es. conferme appuntamenti, inviti).
     \item[AWS S3 (Storage)] Scelto come standard de-facto per lo storage di oggetti. L'upload avviene in streaming tramite \texttt{multer-s3}, evitando il salvataggio temporaneo su disco del server.
+    \item[Sharp] Libreria di image processing ad alte prestazioni usata nel backend per comprimere e ridimensionare le immagini prima del caricamento su AWS S3. Converte gli input in JPEG progressivo con qualità controllata, riducendo dimensioni e standardizzando il formato.
     \item[Leaflet] Libreria JavaScript open-source scelta per il rendering delle mappe interattive nel frontend (Angular). È stata preferita a Google Maps SDK per la sua leggerezza, modularità e l'assenza di costi di licenza (cost-effective).
     \item[OpenStreetMap \& Nominatim] Utilizzati rispettivamente come provider dei "tiles" (la grafica della mappa) e come servizio di \textit{Geocoding} (conversione da indirizzo testuale a coordinate Lat/Long). Questa combinazione garantisce l'indipendenza da provider proprietari.
     \item[Open-Meteo API] API esterna integrata per fornire dati meteorologici in tempo reale. Arricchisce l'esperienza di prenotazione permettendo all'utente di valutare le condizioni meteo previste per la data della visita.
